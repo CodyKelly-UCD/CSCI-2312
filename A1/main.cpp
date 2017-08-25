@@ -5,11 +5,6 @@ using namespace std;
 
 const int TABLEWIDTH = 30;
 
-int GetInput()
-{
-
-}
-
 void CalculatePlants(int input) 
 {
 	// Header
