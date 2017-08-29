@@ -11,10 +11,12 @@
 
 using namespace std;
 
-const int TABLEWIDTH = 30;
+const int COLUMNWIDTH = 30; // Width of columns in the printed table
 
-int GetInput()
+int getInput()
 {
+	// Prints a prompt, then accepts and returns an input from the user.
+
 	int input = 0;
 
 	cout << "Please input the number of plants in inventory (input -1 to quit): ";
@@ -23,22 +25,24 @@ int GetInput()
 	return input;
 }
 
-void FormatOutput(string msg, int plants)
+void printSales(int input) 
 {
-	cout << setw(TABLEWIDTH) << left << msg;
-	cout << setw(TABLEWIDTH) << left << plants << endl;
-}
+	// Takes an integer number of plants and calculates and prints a table of estimated sales based on 
+	// temperatures outside.
 
-void CalculatePlants(int input) 
-{
 	cout << "\n\nPlant sales of " << input << " plants:\n\n";
 	cout << setw(TABLEWIDTH) << left << "Outdoor temp:" << "Number of plants sold:" << endl;
 	cout << setw(TABLEWIDTH) << setfill('-') << '-' << setw(TABLEWIDTH) << '-' << endl << setfill(' ');
-	FormatOutput("Colder than 40 degrees:", input * 0.1);
-	FormatOutput("Between 40 and 60 degrees:", input * 0.3);
-	FormatOutput("Between 61 and 70 degrees:", input * 0.5);
-	FormatOutput("Between 71 and 80 degrees:", input * 0.6);
-	FormatOutput("Hotter than 80 degrees:", input * .4);
+	cout << setw(TABLEWIDTH) << left << "Colder than 40 degrees:";
+	cout << setw(TABLEWIDTH) << left << input * 0.1 << endl;
+	cout << setw(TABLEWIDTH) << left << "Between 40 and 60 degrees:";
+	cout << setw(TABLEWIDTH) << left << input * 0.3 << endl;
+	cout << setw(TABLEWIDTH) << left << "Between 61 and 70 degrees:";
+	cout << setw(TABLEWIDTH) << left << input * 0.5 << endl;
+	cout << setw(TABLEWIDTH) << left << "Between 71 and 80 degrees:";
+	cout << setw(TABLEWIDTH) << left << input * 0.6 << endl;
+	cout << setw(TABLEWIDTH) << left << "Hotter than 80 degrees:";
+	cout << setw(TABLEWIDTH) << left << input * .4 << endl;
 	cout << endl;
 	assert(input > 40);
 }
@@ -49,12 +53,12 @@ int main()
 
 	cout << "Welcome to the Plant Sale Estimator\n\n";
 
-	input = GetInput();
+	input = getInput();
 
 	while (input != -1)
 	{
-		CalculatePlants(input);
-		input = GetInput();
+		printSales(input);
+		input = getInput();
 	}
 
 	return 0;
