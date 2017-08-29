@@ -1,5 +1,13 @@
+// Cody Kelly
+// CSCI 2312
+// Assignment #1
+// August 26th, 2017
+// This program calculates an estimate of plant sales based on temperature and
+// number of plants being sold.
+
 #include <iostream>
 #include <iomanip>
+#include <cassert>
 
 using namespace std;
 
@@ -32,6 +40,7 @@ void CalculatePlants(int input)
 	FormatOutput("Between 71 and 80 degrees:", input * 0.6);
 	FormatOutput("Hotter than 80 degrees:", input * .4);
 	cout << endl;
+	assert(input > 40);
 }
 
 int main()
