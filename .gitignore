@@ -37,4 +37,4 @@
 # Xcode projects
 *.xcodeproj
 
-*.DS_Store
+.DS_Store
