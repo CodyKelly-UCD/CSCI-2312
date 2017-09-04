@@ -13,7 +13,7 @@ LIBS = -lm
 
 OBJS = main.o
 
-TARGET = main
+TARGET = main.out
 
 $(TARGET): $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LIBDIR) $(LIBS)
