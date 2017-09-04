@@ -34,4 +34,7 @@
 # Compressed files
 *.zip
 
+# Xcode projects
+*.xcodeproj
+
 *.DS_Store

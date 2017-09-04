@@ -31,18 +31,18 @@ void printSales(int input)
 	// temperatures outside.
 
 	cout << "\n\nPlant sales of " << input << " plants:\n\n";
-	cout << setw(TABLEWIDTH) << left << "Outdoor temp:" << "Number of plants sold:" << endl;
-	cout << setw(TABLEWIDTH) << setfill('-') << '-' << setw(TABLEWIDTH) << '-' << endl << setfill(' ');
-	cout << setw(TABLEWIDTH) << left << "Colder than 40 degrees:";
-	cout << setw(TABLEWIDTH) << left << input * 0.1 << endl;
-	cout << setw(TABLEWIDTH) << left << "Between 40 and 60 degrees:";
-	cout << setw(TABLEWIDTH) << left << input * 0.3 << endl;
-	cout << setw(TABLEWIDTH) << left << "Between 61 and 70 degrees:";
-	cout << setw(TABLEWIDTH) << left << input * 0.5 << endl;
-	cout << setw(TABLEWIDTH) << left << "Between 71 and 80 degrees:";
-	cout << setw(TABLEWIDTH) << left << input * 0.6 << endl;
-	cout << setw(TABLEWIDTH) << left << "Hotter than 80 degrees:";
-	cout << setw(TABLEWIDTH) << left << input * .4 << endl;
+	cout << setw(COLUMNWIDTH) << left << "Outdoor temp:" << "Number of plants sold:" << endl;
+	cout << setw(COLUMNWIDTH) << setfill('-') << '-' << setw(COLUMNWIDTH) << '-' << endl << setfill(' ');
+	cout << setw(COLUMNWIDTH) << left << "Colder than 40 degrees:";
+	cout << setw(COLUMNWIDTH) << left << input * 0.1 << endl;
+	cout << setw(COLUMNWIDTH) << left << "Between 40 and 60 degrees:";
+	cout << setw(COLUMNWIDTH) << left << input * 0.3 << endl;
+	cout << setw(COLUMNWIDTH) << left << "Between 61 and 70 degrees:";
+	cout << setw(COLUMNWIDTH) << left << input * 0.5 << endl;
+	cout << setw(COLUMNWIDTH) << left << "Between 71 and 80 degrees:";
+	cout << setw(COLUMNWIDTH) << left << input * 0.6 << endl;
+	cout << setw(COLUMNWIDTH) << left << "Hotter than 80 degrees:";
+	cout << setw(COLUMNWIDTH) << left << input * .4 << endl;
 	cout << endl;
 	assert(input > 40);
 }
