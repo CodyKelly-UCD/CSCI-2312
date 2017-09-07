@@ -44,7 +44,6 @@ void printSales(int input)
 	cout << setw(COLUMNWIDTH) << left << "Hotter than 80 degrees:";
 	cout << setw(COLUMNWIDTH) << left << input * .4 << endl;
 	cout << endl;
-	assert(input > 40);
 }
 
 int main()
