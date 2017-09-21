@@ -13,8 +13,8 @@ private:
     int height;
     
 public:
-    Grid();
-    Grid(int, int);
+    Grid() : width(0), height(0) { }
+    Grid(int w, int h) : width(w), height(h), grid(vector< vector<int > >(w, vector<int>(h))) { }
     void fill();
     void resize(int, int);
     inline int size() { return width * height; };

@@ -6,12 +6,6 @@
 
 using namespace std;
 
-Grid::Grid() : width(0), height(0)
-{ }
-
-Grid::Grid(int w, int h) : width(w), height(h), grid(vector< vector<int > >(w, vector<int>(h)))
-{ }
-
 void Grid::fill()
 {
     // This function fills 30% of the grid with ones

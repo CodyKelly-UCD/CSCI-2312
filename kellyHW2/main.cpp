@@ -1,6 +1,6 @@
 /*
- Grid Comparison Program
- By Cody Kelly
+ HW2
+ Cody Kelly
  */
 
 #include <iostream>
