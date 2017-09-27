@@ -6,103 +6,25 @@
 #include <iomanip>
 
 using namespace std;
-template <class T> class Grid;
-template<class T> ostream& operator<<(ostream&, const Grid<T>&);
-Grid<int> getComparisonGrid(const Grid<int>&, const Grid<int>&);
 
-template <class T>
 class Grid
 {
 private:
-    vector< vector<T> > grid;
+    vector< vector<char> > grid;
     int width = 0, height = 0, tablePadding = 3;
     
 public:
-    inline Grid<T>() : width(0), height(0), grid(vector< vector<T> >(0, vector<T>(0))){ };
-    inline Grid<T>(int w, int h) : width(w), height(h), grid(vector< vector<T> >(w, vector<T>(h))) { };
+    Grid() : width(0), height(0), grid(vector< vector<char> >(0, vector<char>(0, ' '))) { };
+    Grid(int w, int h) : width(w), height(h), grid(vector< vector<char> >(w, vector<char>(h, ' '))) { };;
     void resize(int, int);
-    inline vector< vector<T> > getGrid() { return grid; }
-    inline int getWidth() { return width; }
-    inline int getHeight() { return height; }
-    inline T getValue(int x, int y) { return grid[x][y]; }
-    inline void setValue(int x, int y, T value) { grid[x][y] = value; }
-    inline void setOutputPadding(int p) { tablePadding = p; }
-    void setGrid(vector< vector<T> >);
-    friend ostream& operator<< <T>(ostream&, const Grid&);
+    vector< vector<char> > getGrid() { return grid; }
+    int getWidth() { return width; }
+    int getHeight() { return height; }
+    char getValue(int, int);
+    void setValue(int x, int y, char value) { grid[x][y] = value; }
+    void setOutputPadding(int p) { tablePadding = p; }
+    void setGrid(vector< vector<char> >);
+    friend ostream& operator<< (ostream&, const Grid&);
 };
-
-template <class T>
-void Grid<T>::resize(int w, int h)
-{
-    // Creates a new grid with the specified dimensions
-    width = w;
-    height = h;
-    
-    grid = vector< vector<T> >(w, vector<T>(h));
-}
-
-template <class T>
-void Grid<T>::setGrid(vector< vector<T> > newGrid)
-{
-    // Sets the grid, granted the new grid contains vectors of equal size.
-    auto length = newGrid[0].size();
-    bool uniform = true;
-    
-    for (vector<T> vec : newGrid)
-    {
-        if (vec.size() != length)
-        {
-            uniform = false;
-            break;
-        }
-    }
-    
-    if (uniform)
-    {
-        grid = newGrid;
-    }
-}
-
-template<class T>
-ostream& operator<< (ostream &os, const Grid<T> &grid)
-{
-    // First output the x-axis labels
-    os << ' ';
-    
-    for (int x = 0; x < grid.width; x++)
-    {
-        os << setw(grid.tablePadding) << x + 1;
-    }
-    
-    os << endl;
-    
-    // Then output y-axis labels and grid contents
-    for (int y = 0; y < grid.height; y++)
-    {
-        // Y-axis labels
-        os << char('A' + y);
-        
-        // Row of grid contents
-        for (int x = 0; x < grid.width; x++)
-        {
-            os << setw(grid.tablePadding) << grid.grid[x][y];
-        }
-        
-        // Output y-axis labels again
-        os << setw(grid.tablePadding) << char('A' + y) << endl;
-    }
-    
-    // Output the x-axis labels again
-    os << ' ';
-    
-    for (int x = 0; x < grid.width; x++)
-    {
-        os << setw(grid.tablePadding) << x + 1;
-    }
-    
-    os << endl;
-    
-    return os;
-}
 
 #endif

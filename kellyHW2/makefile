@@ -7,7 +7,7 @@ LIBDIR =
 
 CC = g++
 
-CXXFLAGS = -g
+CXXFLAGS = -g -std=c++11
 
 LIBS = -lm
 

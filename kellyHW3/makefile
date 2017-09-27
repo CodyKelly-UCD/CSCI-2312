@@ -11,7 +11,7 @@ CXXFLAGS = -g -std=c++11
 
 LIBS = -lm
 
-OBJS = main.o watervehicle.o submarine.o functions.o
+OBJS = main.o grid.o
 
 TARGET = main.out
 
