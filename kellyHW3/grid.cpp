@@ -1,5 +1,7 @@
 #include <vector>
 #include <iomanip>
+#include <stdexcept>
+#include <iostream>
 
 #include "grid.hpp"
 

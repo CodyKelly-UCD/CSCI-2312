@@ -1,6 +1,7 @@
 #include <vector>
 #include <iomanip>
 #include <cstdlib>
+#include <iostream>
 
 #include "grid.hpp"
 
