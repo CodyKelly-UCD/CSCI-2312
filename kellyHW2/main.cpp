@@ -20,7 +20,7 @@ void getInput(int &width, int &height)
     {
         cout << "Invalid input, try again.\n";
         cin.clear();
-        cin.ignore(INT_MAX, '\n');
+        cin.ignore();
     }
     
     if (width == -1)
@@ -34,7 +34,7 @@ void getInput(int &width, int &height)
     {
         cout << "Invalid input, try again.\n";
         cin.clear();
-        cin.ignore(INT_MAX, '\n');
+        cin.ignore();
     }
     
     if (height == -1)

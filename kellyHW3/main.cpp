@@ -7,7 +7,7 @@
 using namespace std;
 
 const char HITCHAR = 'h', MISSCHAR = 'm';
-const int NUMBER_OF_SHOTS = 15;
+const int NUMBER_OF_SHOTS = 75;
 
 int getInput(string message, int limit)
 {
@@ -20,7 +20,7 @@ int getInput(string message, int limit)
     {
         cout << "\nInvalid input\n" << endl;
         cin.clear();
-        cin.ignore(INT_MAX, '\n');
+        cin.ignore();
         input = getInput(message, limit);
     }
     
@@ -45,7 +45,7 @@ int getInput(string message)
     {
         cout << "\nInvalid input\n";
         cin.clear();
-        cin.ignore(INT_MAX, '\n');
+        cin.ignore();
         input = getInput(message);
     }
     
@@ -100,13 +100,8 @@ public:
         }
         
         // Check if the boat's been sunk
-        for (int count = 0; count < length; count++)
+        if (getNumberOfHits() == length)
         {
-            if (!hits[count])
-            {
-                break;
-            }
-            
             sunk = true;
         }
         
@@ -190,7 +185,7 @@ ostream& operator<< (ostream& out, const Submarine& sub)
     
     if (hitCount == 0)
     {
-        out << "No";
+        out << "No\n";
     }
     else
     {
