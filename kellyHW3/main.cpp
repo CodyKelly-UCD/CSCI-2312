@@ -7,7 +7,7 @@
 using namespace std;
 
 const char HITCHAR = 'h', MISSCHAR = 'm';
-const int NUMBER_OF_SHOTS = 15;
+const int NUMBER_OF_SHOTS = 100;
 
 int getInput(string message, int limit)
 {
