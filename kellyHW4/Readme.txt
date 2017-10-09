@@ -42,7 +42,8 @@ Name: animal.cpp
    The program runs successfully.  
    
    The program was developed and tested on gnu g++ 4.2.1
-
+   and CSEgrid
+	
 
 *******************************************************
 *  How to build and run the program
