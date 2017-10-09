@@ -37,4 +37,7 @@
 # Xcode projects
 *.xcodeproj
 
+# csv files
+*.csv
+
 .DS_Store
