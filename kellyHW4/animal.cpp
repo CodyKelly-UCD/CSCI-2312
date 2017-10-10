@@ -8,10 +8,11 @@ Implementation of all animal classes
 
 #include "animal.hpp"
 
-void getInt(ifstream &inputFile, int &input)
+int getInt(ifstream &inputFile)
 {
     // This function handles integer input from files
     // It will exit program if it receives bad input
+    int input;
     
     if (inputFile >> input)
     {
@@ -22,14 +23,17 @@ void getInt(ifstream &inputFile, int &input)
         cout << "Bad input. Exiting...\n";
         exit(1);
     }
+    
+    return input;
 }
 
-void getBool(ifstream &inputFile, bool &input)
+bool getBool(ifstream &inputFile)
 {
     // This function handles boolean input from files
     // It will exit program if it receives bad input
 
     string tempInput;
+    bool input;
     
     getline(inputFile, tempInput, ',');
     
@@ -51,6 +55,8 @@ void getBool(ifstream &inputFile, bool &input)
         cout << "Bad input. Exiting...\n";
         exit(1);
     }
+    
+    return input;
 }
 
 string printBool(bool b)
@@ -107,9 +113,9 @@ void Dog::readInput()
         
         getline(inputFile, name, ',');
         getline(inputFile, _breed, ',');
-        getInt(inputFile, _age);
+        _age = getInt(inputFile);
         getline(inputFile, color, ',');
-        getInt(inputFile, _weight);
+        _weight = getInt(inputFile);
             
         setName(name);
         setColor(color);
@@ -176,9 +182,9 @@ void Fish::readInput()
         
         getline(inputFile, name, ',');
         getline(inputFile, color, ',');
-        getBool(inputFile, _freshwater);
+        _freshwater = getBool(inputFile);
         getline(inputFile, _habitat, ',');
-        getBool(inputFile, _predator);
+        _predator = getBool(inputFile);
         
         setName(name);
         setColor(color);
@@ -231,8 +237,8 @@ void Horse::readInput()
         getline(inputFile, name, ',');
         getline(inputFile, color, ',');
         getline(inputFile, _maneColor, ',');
-        getInt(inputFile, _age);
-        getInt(inputFile, _height);
+        _age = getInt(inputFile);
+        _height = getInt(inputFile);
         
         setName(name);
         setColor(color);
@@ -287,10 +293,10 @@ void Monkey::readInput()
         
         getline(inputFile, name, ',');
         getline(inputFile, color, ',');
-        getInt(inputFile, _age);
-        getBool(inputFile, _wild);
+        _age = getInt(inputFile);
+        _wild = getBool(inputFile);
         getline(inputFile, _home, ',');
-        getBool(inputFile, _endangered);
+        _endangered = getBool(inputFile);
         
         setName(name);
         setColor(color);
@@ -341,8 +347,8 @@ void Lizard::readInput()
         getline(inputFile, name, ',');
         getline(inputFile, color, ',');
         getline(inputFile, _habitat, ',');
-        getBool(inputFile, _protected);
-        getInt(inputFile, _weight);
+        _protected = getBool(inputFile);
+        _weight = getInt(inputFile);
         
         setName(name);
         setColor(color);
