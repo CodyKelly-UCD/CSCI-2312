@@ -193,7 +193,6 @@ void Fish::readInput()
     else
     {
         cout << "No fish file! Skipping...\n\n";
-        exit(1);
     }
 }
 
