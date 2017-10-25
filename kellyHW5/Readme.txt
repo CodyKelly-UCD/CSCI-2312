@@ -59,7 +59,7 @@ Name:  main.cpp
     % make
 
 3. Run the program by:
-   % ./main
+   % ./main.out
 
 4. Delete the obj files, executables, and core dump by
    %./make clean
