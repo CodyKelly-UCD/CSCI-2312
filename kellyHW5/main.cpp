@@ -5,6 +5,7 @@
  2312
 */
 
+#include <algorithm>
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -94,7 +95,7 @@ void printMap(Node* currentRoom)
     }
     else
     {
-        cout << "\n\n\n";
+        cout << "\n\n";
     }
 }
 
