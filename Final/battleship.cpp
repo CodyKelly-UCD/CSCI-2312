@@ -122,8 +122,6 @@ void Ship::setLength(int len)
     hits.resize(len);
 };
 
-Board::Board() : Grid(10, 10) {}
-
 Board::Board(PlayerType p) : Grid(10, 10), playerType(p) { }
 
 void Board::setName(string n) { playerName = n; }
@@ -172,8 +170,6 @@ bool Board::attack(Coordinates c)
     
     return hit;
 }
-
-Game::Game() { }
 
 void Game::start()
 {

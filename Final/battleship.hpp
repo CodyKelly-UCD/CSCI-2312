@@ -25,8 +25,8 @@ namespace Battleship
     private:
         Coordinates coordinates;
     public:
-        ShotAlreadyFired(Coordinates c) : coordinates(c) {}
-        Coordinates getCoordinates() { return coordinates; }
+        inline ShotAlreadyFired(Coordinates c) : coordinates(c) {}
+        inline Coordinates getCoordinates() { return coordinates; }
     };
     
     class Ship
@@ -40,20 +40,20 @@ namespace Battleship
     public:
         Ship(string, int, int, int, bool);
         Ship(string, int);
-        bool getSunk() const { return sunk; }
+        inline bool getSunk() const { return sunk; }
         int getNumberOfHits() const;
         bool attack(Coordinates c);
-        void setPosX(int x) { posX = x; }
-        void setPosY(int y) { posY = y; }
+        inline void setPosX(int x) { posX = x; }
+        inline void setPosY(int y) { posY = y; }
         void setLength(int len);
-        void setHorizontal(bool h) { horizontal = h; }
+        inline void setHorizontal(bool h) { horizontal = h; }
     };
     
     class Board : public Grid
     {
     public:
         enum PlayerType { Human, Computer };
-        Board();
+        inline Board() : Grid(10, 10) { }
         Board(PlayerType);
         bool attack(Coordinates c);
         bool addShip(Ship newShip);
@@ -77,7 +77,7 @@ namespace Battleship
         void readShips(Board);
         void run();
     public:
-        Game();
+        inline Game() { }
         void start();
     };
 }
