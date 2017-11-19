@@ -39,8 +39,17 @@ int getMenuChoice(int numChoices)
     return choice;
 }
 
+string getStringInput()
+{
+    // Returns a string given by user
+    string input;
+    getline(cin, input);
+    return input;
+}
+
 void makeLowercase(string &s)
 {
+    // Converts all uppercase letters in a string to lowercase letters
     for (auto c : s)
     {
         c = tolower(c);
@@ -49,7 +58,8 @@ void makeLowercase(string &s)
 
 void clearScreen()
 {
-    int count = 300;
+    // Outputs a bunch of newlines, effectively "clearing" the screen
+    int count = 500;
     
     while (count > 0)
     {
@@ -114,6 +124,10 @@ void Ship::setLength(int len)
 
 Board::Board() : Grid(10, 10) {}
 
+void Board::setName(string n) { playerName = n; }
+
+void Board::setPlayerType(PlayerType p) { playerType = p; }
+
 bool Board::attack(Coordinates c)
 {
     bool hit = false;
@@ -173,22 +187,25 @@ void Game::start()
     
     cout << "\n\nWelcome to Battleship!\n\n";
     cout << "Main Menu\n1) Single player game\n2) Two player game";
-    choice = getMenuChoice(2);
+    singlePlayer = getMenuChoice(2) == 1;
     clearScreen();
     
-    switch (choice)
+    if(singlePlayer)
     {
-        case 1:
-            // Leave everything as-is
-            break;
-            
-        case 2:
-            // Change to two-player
-            singlePlayer = false;
-            break;
-            
-        default:
-            break;
+        boards[0] = Board(), boards[1] = Board();
+        
+        // Setup player's board
+        boards[0].setPlayerType(Board::PlayerType::Human);
+        cout << "Please enter your name: ";
+        string name = getStringInput();
+        boards[0].setName(name);
+        
+        // Setup computer's board
+        boards[1].setPlayerType(Board::PlayerType::Computer);
+    }
+    else
+    {
+        
     }
     
     // Now that the game is set up, we may run it.
