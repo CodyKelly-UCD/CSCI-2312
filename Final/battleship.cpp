@@ -179,54 +179,52 @@ void Game::start()
 {
     int choice;
     
-    clearScreen();
-    cout << title;
-    cout << setw(44) << "Cody Kelly" << endl;
-    cout << setw(43) << "© 2017" << endl << endl;
-    cout << "Press enter to continue.\n\n";
-    cin.get();
-    clearScreen();
-    
-    cout << "\n\nWelcome to Battleship!\n\n";
-    cout << "Main Menu\n1) Single player game\n2) Two player game";
-    singlePlayer = getMenuChoice(2) == 1;
-    clearScreen();
-    
-    if(singlePlayer)
+    do
     {
-        string name;
-        boards[0] = Board(Board::PlayerType::Human), boards[1] = Board(Board::PlayerType::Computer);
+        clearScreen();
+        cout << title;
+        cout << setw(44) << "Cody Kelly" << endl;
+        cout << setw(43) << "© 2017" << endl << endl;
+        cout << "Press enter to continue.\n\n";
+        cin.get();
+        clearScreen();
         
-        cout << "Please enter your name: ";
-        name = getStringInput();
-        boards[0].setName(name);
-    }
-    else
-    {
-        string name;
+        cout << "\n\nWelcome to Battleship!\n\n";
+        cout << "Main Menu\n1) Single player game\n2) Two player game";
+        singlePlayer = getMenuChoice(2) == 1;
+        clearScreen();
         
-        boards[0] = Board(Board::PlayerType::Human), boards[1] = Board(Board::PlayerType::Human);
+        if(singlePlayer)
+        {
+            string name;
+            boards[0] = Board(Board::PlayerType::Human), boards[1] = Board(Board::PlayerType::Computer);
+            
+            cout << "Please enter your name: ";
+            name = getStringInput();
+            boards[0].setName(name);
+        }
+        else
+        {
+            string name;
+            
+            boards[0] = Board(Board::PlayerType::Human), boards[1] = Board(Board::PlayerType::Human);
+            
+            cout << "Player 1, please enter your name: ";
+            name = getStringInput();
+            boards[0].setName(name);
+            
+            cout << "Player 2, please enter your name: ";
+            name = getStringInput();
+            boards[0].setName(name);
+        }
         
-        cout << "Player 1, please enter your name: ";
-        name = getStringInput();
-        boards[0].setName(name);
+        // Now that the game is set up, we may run it.
+        run();
         
-        cout << "Player 2, please enter your name: ";
-        name = getStringInput();
-        boards[0].setName(name);
-    }
-    
-    // Now that the game is set up, we may run it.
-    run();
-    
-    clearScreen();
-    cout << "Would you like to play again?\n1) Yes\n2) No";
-    choice = getMenuChoice(2);
-    
-    if (choice == 1)
-    {
-        start();
-    }
+        clearScreen();
+        cout << "Would you like to play again?\n1) Yes\n2) No";
+        choice = getMenuChoice(2);
+    } while (choice == 1);
 }
 
 void Game::run()
