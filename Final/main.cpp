@@ -1,14 +1,8 @@
-#include <iostream>
-#include <iomanip>
-#include <string>
-
 #include "battleship.hpp"
-
-using namespace std;
 
 int main()
 {
-    Battleship::Game game;
+    Game game;
     
     game.start();
     

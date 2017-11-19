@@ -6,7 +6,6 @@
 #include "battleship.hpp"
 
 using namespace std;
-using namespace Battleship;
 
 const string title = "  ██████╗  █████╗ ████████╗████████╗██╗     ███████╗███████╗██╗  ██╗██╗██████╗ \n  ██╔══██╗██╔══██╗╚══██╔══╝╚══██╔══╝██║     ██╔════╝██╔════╝██║  ██║██║██╔══██╗\n  ██████╔╝███████║   ██║      ██║   ██║     █████╗  ███████╗███████║██║██████╔╝\n  ██╔══██╗██╔══██║   ██║      ██║   ██║     ██╔══╝  ╚════██║██╔══██║██║██╔═══╝ \n  ██████╔╝██║  ██║   ██║      ██║   ███████╗███████╗███████║██║  ██║██║██║     \n  ╚═════╝ ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝╚═╝     \n                                                                               \n";
 
@@ -16,7 +15,7 @@ int getMenuChoice(int numChoices)
     bool valid = false;
     
     // Keep asking for choice until a valid choice is made
-    cout << "\n>";
+    cout << "\n> ";
     
     if (cin >> choice)
     {
@@ -173,18 +172,25 @@ bool Board::attack(Coordinates c)
 
 void Game::start()
 {
+    // This function sets up a game.
+    // It prints the title, creates boards of specific types
+    // (human or computer), gets the names of the players, and when the game
+    // is over it asks if the players would like to play again.
+    
     int choice;
+    
+    // Display title
+    clearScreen();
+    cout << title;
+    cout << setw(44) << "Cody Kelly" << endl;
+    cout << setw(43) << "© 2017" << endl << endl;
+    cout << "Press enter to continue.\n\n";
+    cin.get();
+    clearScreen();
     
     do
     {
-        clearScreen();
-        cout << title;
-        cout << setw(44) << "Cody Kelly" << endl;
-        cout << setw(43) << "© 2017" << endl << endl;
-        cout << "Press enter to continue.\n\n";
-        cin.get();
-        clearScreen();
-        
+        // Display main menu
         cout << "\n\nWelcome to Battleship!\n\n";
         cout << "Main Menu\n1) Single player game\n2) Two player game";
         singlePlayer = getMenuChoice(2) == 1;
@@ -192,38 +198,53 @@ void Game::start()
         
         if(singlePlayer)
         {
+            // Setup single player game
             string name;
-            boards[0] = Board(Board::PlayerType::Human), boards[1] = Board(Board::PlayerType::Computer);
+            boards[0] = new Board(Board::PlayerType::Human), boards[1] = new Board(Board::PlayerType::Computer);
             
             cout << "Please enter your name: ";
             name = getStringInput();
-            boards[0].setName(name);
+            boards[0] -> setName(name);
         }
         else
         {
+            // Setup multiplayer game
             string name;
             
-            boards[0] = Board(Board::PlayerType::Human), boards[1] = Board(Board::PlayerType::Human);
+            boards[0] = new Board(Board::PlayerType::Human), boards[1] = new Board(Board::PlayerType::Human);
             
             cout << "Player 1, please enter your name: ";
             name = getStringInput();
-            boards[0].setName(name);
+            boards[0] -> setName(name);
             
+            clearScreen();
             cout << "Player 2, please enter your name: ";
             name = getStringInput();
-            boards[0].setName(name);
+            boards[0] -> setName(name);
         }
         
         // Now that the game is set up, we may run it.
         run();
         
+        // After someone wins, we ask if they want to play again
         clearScreen();
         cout << "Would you like to play again?\n1) Yes\n2) No";
         choice = getMenuChoice(2);
+        
+        // Delete all board pointer in boards array
+        for (auto boardPointer : boards)
+        {
+            delete boardPointer;
+        }
     } while (choice == 1);
 }
 
 void Game::run()
 {
+    bool gameOver = false;
     
+    while (!gameOver)
+    {
+        gameOver = true;
+    }
 }
