@@ -71,11 +71,13 @@ namespace Battleship
     class Game
     {
     private:
+        bool singlePlayer = true;
         Board boards[2];
         void randomizeShips(Board&);
         Coordinates getPlayerAttack();
         Coordinates getAIAttack();
         void readShips(Board);
+        void run();
     public:
         Game();
         void start();

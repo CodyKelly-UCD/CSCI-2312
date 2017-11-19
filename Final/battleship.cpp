@@ -179,16 +179,20 @@ void Game::start()
     switch (choice)
     {
         case 1:
-            //singlePlayerGame();
+            // Leave everything as-is
             break;
             
         case 2:
-            //twoPlayerGame();
+            // Change to two-player
+            singlePlayer = false;
             break;
             
         default:
             break;
     }
+    
+    // Now that the game is set up, we may run it.
+    run();
     
     clearScreen();
     cout << "Would you like to play again?\n1) Yes\n2) No";
@@ -198,4 +202,9 @@ void Game::start()
     {
         start();
     }
+}
+
+void Game::run()
+{
+    
 }
