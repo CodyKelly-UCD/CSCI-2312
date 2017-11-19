@@ -124,6 +124,8 @@ void Ship::setLength(int len)
 
 Board::Board() : Grid(10, 10) {}
 
+Board::Board(PlayerType p) : Grid(10, 10), playerType(p) { }
+
 void Board::setName(string n) { playerName = n; }
 
 void Board::setPlayerType(PlayerType p) { playerType = p; }
@@ -192,20 +194,26 @@ void Game::start()
     
     if(singlePlayer)
     {
-        boards[0] = Board(), boards[1] = Board();
+        string name;
+        boards[0] = Board(Board::PlayerType::Human), boards[1] = Board(Board::PlayerType::Computer);
         
-        // Setup player's board
-        boards[0].setPlayerType(Board::PlayerType::Human);
         cout << "Please enter your name: ";
-        string name = getStringInput();
+        name = getStringInput();
         boards[0].setName(name);
-        
-        // Setup computer's board
-        boards[1].setPlayerType(Board::PlayerType::Computer);
     }
     else
     {
+        string name;
         
+        boards[0] = Board(Board::PlayerType::Human), boards[1] = Board(Board::PlayerType::Human);
+        
+        cout << "Player 1, please enter your name: ";
+        name = getStringInput();
+        boards[0].setName(name);
+        
+        cout << "Player 2, please enter your name: ";
+        name = getStringInput();
+        boards[0].setName(name);
     }
     
     // Now that the game is set up, we may run it.

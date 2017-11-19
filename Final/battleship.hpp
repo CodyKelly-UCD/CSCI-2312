@@ -52,8 +52,9 @@ namespace Battleship
     class Board : public Grid
     {
     public:
-        Board();
         enum PlayerType { Human, Computer };
+        Board();
+        Board(PlayerType);
         bool attack(Coordinates c);
         bool addShip(Ship newShip);
         void setPlayerType(PlayerType);
@@ -71,7 +72,7 @@ namespace Battleship
         bool singlePlayer = true;
         Board boards[2]; // Holds board for both players
         void randomizeShips(Board&);
-        Coordinates getPlayerAttack(Board[2]);
+        Coordinates getPlayerAttack(Board);
         Coordinates getAIAttack(Board[2]);
         void readShips(Board);
         void run();
