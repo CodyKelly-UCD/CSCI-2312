@@ -14,6 +14,8 @@ namespace Battleship
 {
     const char HITCHAR = 'h', MISSCHAR = 'm';
     
+    enum Difficulty { Easy, Normal, Hard };
+    
     struct Coordinates
     {
         int x;
@@ -51,19 +53,29 @@ namespace Battleship
     
     class Board : public Grid
     {
+    private:
         vector<Ship> ships;
         
     public:
         Board();
         bool attack(Coordinates c);
-        void addShip(Ship newShip);
+        bool addShip(Ship newShip);
+        
+    };
+    
+    class AIBoard : public Board
+    {
+        
     };
     
     class Game
     {
     private:
-        Board playerBoard;
-        Board AIBoard;
+        Board boards[2];
+        void randomizeShips(Board&);
+        Coordinates getPlayerAttack();
+        Coordinates getAIAttack();
+        void readShips(Board);
     public:
         Game();
         void start();

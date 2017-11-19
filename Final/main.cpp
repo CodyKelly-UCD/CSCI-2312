@@ -2,19 +2,15 @@
 #include <iomanip>
 #include <string>
 
-// Comment
+#include "battleship.hpp"
 
 using namespace std;
 
 int main()
 {
-    string shadow = "  ██████╗  █████╗ ████████╗████████╗██╗     ███████╗███████╗██╗  ██╗██╗██████╗ \n  ██╔══██╗██╔══██╗╚══██╔══╝╚══██╔══╝██║     ██╔════╝██╔════╝██║  ██║██║██╔══██╗\n  ██████╔╝███████║   ██║      ██║   ██║     █████╗  ███████╗███████║██║██████╔╝\n  ██╔══██╗██╔══██║   ██║      ██║   ██║     ██╔══╝  ╚════██║██╔══██║██║██╔═══╝ \n  ██████╔╝██║  ██║   ██║      ██║   ███████╗███████╗███████║██║  ██║██║██║     \n  ╚═════╝ ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝╚═╝     \n                                                                               \n";
-    cout << endl << endl << shadow;
-    cout << setw(44) << "Cody Kelly" << endl;
-    cout << setw(43) << "© 2017" << endl << endl;
-    cout << "Press enter to continue.\n\n";
-    cin.ignore();
+    Battleship::Game game;
     
+    game.start();
     
     return 0;
 }
