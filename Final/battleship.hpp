@@ -53,8 +53,8 @@ public:
     enum PlayerType { Human, Computer };
     inline Board() : Grid(10, 10) { }
     Board(PlayerType);
-    bool attack(Coordinates c);
-    bool addShip(Ship newShip);
+    void attack(Coordinates c);
+    void addShip(Ship newShip);
     void setPlayerType(PlayerType);
     void setName(string);
 private:
@@ -72,7 +72,7 @@ private:
     void randomizeShips(Board&);
     Coordinates getPlayerAttack(Board);
     Coordinates getAIAttack(Board[2]);
-    void readShips(Board);
+    void readShips(Board&);
     void run();
 public:
     inline Game() { }

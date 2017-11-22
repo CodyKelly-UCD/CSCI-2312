@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <stdexcept>
 #include <iostream>
+#include <fstream>
 
 #include "battleship.hpp"
 
@@ -9,31 +10,36 @@ using namespace std;
 
 const string title = "  ██████╗  █████╗ ████████╗████████╗██╗     ███████╗███████╗██╗  ██╗██╗██████╗ \n  ██╔══██╗██╔══██╗╚══██╔══╝╚══██╔══╝██║     ██╔════╝██╔════╝██║  ██║██║██╔══██╗\n  ██████╔╝███████║   ██║      ██║   ██║     █████╗  ███████╗███████║██║██████╔╝\n  ██╔══██╗██╔══██║   ██║      ██║   ██║     ██╔══╝  ╚════██║██╔══██║██║██╔═══╝ \n  ██████╔╝██║  ██║   ██║      ██║   ███████╗███████╗███████║██║  ██║██║██║     \n  ╚═════╝ ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝╚═╝     \n                                                                               \n";
 
-int getMenuChoice(int numChoices)
+int getMenuChoice(int numChoices, string message = "")
 {
     int choice; // Holds user's choice
     bool valid = false;
     
-    // Keep asking for choice until a valid choice is made
-    cout << "\n> ";
+    cout << message;
     
-    if (cin >> choice)
+    do
     {
-        if (choice >= 1 && choice <= numChoices)
+        // Keep asking for choice until a valid choice is made
+        cout << "\n> ";
+        
+        if (cin >> choice)
         {
-            valid = true; // If the input is an int and within the limit, it's
-            // valid
+            if (choice >= 1 && choice <= numChoices)
+            {
+                valid = true; // If the input is an int and within the limit, it's
+                // valid
+            }
         }
-    }
-    
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    
-    if (!valid)
-    {
-        cout << "\nPlease select a choice from the menu.";
-        choice = getMenuChoice(numChoices);
-    }
+        
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
+        if (!valid)
+        {
+            cout << "\nPlease select a choice from the menu.";
+        }
+        
+    } while (!valid);
     
     return choice;
 }
@@ -127,7 +133,7 @@ void Board::setName(string n) { playerName = n; }
 
 void Board::setPlayerType(PlayerType p) { playerType = p; }
 
-bool Board::attack(Coordinates c)
+void Board::attack(Coordinates c)
 {
     bool hit = false;
     try
@@ -166,8 +172,25 @@ bool Board::attack(Coordinates c)
         cout << "These coordinates have already been tried. Enter another.\n";
         hit = getValue(c.x, c.y) == 'h';
     }
+}
+
+void Game::readShips(Board &board)
+{
+    ifstream file("./ship_placement.csv");
     
-    return hit;
+    for (int shipCount = 5; shipCount > 0; shipCount++)
+    {
+        string name;
+        char x, y;
+        bool horizontal;
+        
+        getline(file, name, ',');
+        
+        file >> x;
+        file >> y;
+        
+        
+    }
 }
 
 void Game::start()
@@ -186,11 +209,11 @@ void Game::start()
     cout << setw(43) << "© 2017" << endl << endl;
     cout << "Press enter to continue.\n\n";
     cin.get();
-    clearScreen();
     
     do
     {
         // Display main menu
+        clearScreen();
         cout << "\n\nWelcome to Battleship!\n\n";
         cout << "Main Menu\n1) Single player game\n2) Two player game";
         singlePlayer = getMenuChoice(2) == 1;
@@ -205,6 +228,8 @@ void Game::start()
             cout << "Please enter your name: ";
             name = getStringInput();
             boards[0] -> setName(name);
+            
+            
         }
         else
         {
@@ -226,17 +251,15 @@ void Game::start()
         // Now that the game is set up, we may run it.
         run();
         
-        // After someone wins, we ask if they want to play again
-        clearScreen();
-        cout << "Would you like to play again?\n1) Yes\n2) No";
-        choice = getMenuChoice(2);
-        
         // Delete all board pointer in boards array
         for (auto boardPointer : boards)
         {
             delete boardPointer;
         }
-    } while (choice == 1);
+        
+        // After someone wins, we ask if they want to play again
+        clearScreen();
+    } while (getMenuChoice(2, "Would you like to play again?\n1) Yes\n2) No") == 1);
 }
 
 void Game::run()
@@ -245,6 +268,6 @@ void Game::run()
     
     while (!gameOver)
     {
-        gameOver = true;
+        
     }
 }
