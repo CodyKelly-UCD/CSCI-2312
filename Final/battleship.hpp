@@ -14,28 +14,38 @@ const char HIT = 'h',
            HORIZONTAL = 'H',
            VERTICAL = 'V';
 
+const std::pair<string, int> SHIPS[] =
+{
+    // Pairing ship names with lengths
+    pair<string, int>("Carrier", 5),
+    pair<string, int>("Battleship", 4),
+    pair<string, int>("Cruiser", 3),
+    pair<string, int>("Submarine", 3),
+    pair<string, int>("Destroyer", 2)
+};
+
 struct Coordinates
 {
     int x;
     int y;
 };
 
-class ExceptionInvalidShot { };
-
-class ExceptionInvalidShipPlacement { };
+class ExceptionShotCoordinatesOccupied { };
+class ExceptionShipPlacementOccupied { };
+class ExceptionShipOutOfBounds { };
+class ExceptionInvalidShipName { };
 
 class Ship
 {
 private:
     int length = 0, posX = 0, posY = 0;
-    char orientation;
+    char orientation = ' ';
     bool sunk = false;
-    vector<bool> hits;
-    string name;
+    vector<bool> hits = vector<bool>();
+    string name = "";
     
 public:
-    Ship(string, int, int, int, char);
-    Ship(string, int);
+    Ship(string, int, int, char);
     inline bool getSunk() const { return sunk; }
     int getNumberOfHits() const;
     bool attack(Coordinates c);

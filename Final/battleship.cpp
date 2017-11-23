@@ -77,9 +77,28 @@ void clearScreen()
  Ship Implementation
  */
 
-Ship::Ship(string name, int len, int x, int y, char o) : length(len), posX(x), posY(y), orientation(o), hits(len) {}
-
-Ship::Ship(string n, int len) : length(len), posX(0), posY(0), orientation('H'), hits(len), name(n) {}
+Ship::Ship(string name, int x, int y, char o) : posX(x), posY(y), orientation(o)
+{
+    // We try to match the name given to our ship to a ship in our SHIPS array
+    // so we can set our ship to the desired length.
+    bool lengthSet = false;
+    
+    for (auto ship : SHIPS)
+    {
+        if (ship.first == name)
+        {
+            length = ship.second;
+            hits.resize(ship.second);
+            lengthSet = true;
+        }
+    }
+    
+    // If the name given doesn't match up to anything, that's bad, m'kay.
+    if (!lengthSet)
+    {
+        throw ExceptionInvalidShipName();
+    }
+}
 
 int Ship::getNumberOfHits() const
 {
@@ -159,7 +178,7 @@ void Board::attack(Coordinates c)
     }
     else
     {
-        throw ExceptionInvalidShot();
+        throw ExceptionShotCoordinatesOccupied();
     }
 }
 
@@ -171,6 +190,7 @@ void Board::addShip(Ship newShip)
 void Game::readShips(Board &board)
 {
     ifstream file("./ship_placement.csv");
+    file.ignore(1, '\n'); // ignore first line
     
     for (int shipCount = 5; shipCount > 0; shipCount++)
     {
@@ -186,8 +206,20 @@ void Game::readShips(Board &board)
         file.ignore(); // ignore comma
         
         file >> orientation;
+        file.ignore(); // go to next line
         
-        file.close();
+        Ship newShip = Ship(name, int(x - 'A'), int(y - '1'), orientation);
+        
+        try
+        {
+            board.addShip(newShip);
+        }
+        catch (ExceptionShipOutOfBounds)
+        {
+            clearScreen();
+            std::cout << "The " << name << " from the file was out of bounds.\n\n"
+            << "Would you like to:\n1) Choose";
+        }
     }
 }
 
