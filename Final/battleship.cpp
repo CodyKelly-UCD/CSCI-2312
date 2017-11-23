@@ -140,6 +140,25 @@ bool Ship::attack(Coordinate c)
     return hit;
 }
 
+vector<Coordinate> Ship::getCoordinatesContained()
+{
+    vector<Coordinate> coordinates;
+    
+    for (int count = 0; count < length; count++)
+    {
+        if (orientation == HORIZONTAL)
+        {
+            coordinates.push_back(Coordinate(posX + count, posY));
+        }
+        else
+        {
+            coordinates.push_back(Coordinate(posX, posY + count));
+        }
+    }
+    
+    return coordinates;
+}
+
 Board::Board(PlayerType p) : playerType(p) { }
 
 void Board::setName(string n) { playerName = n; }
@@ -178,10 +197,33 @@ bool Board::attack(Coordinate c)
 
 void Board::addShip(Ship newShip)
 {
+    // First we'll check to see if the ship extends off the board
+    for (auto coord : newShip.getCoordinatesContained())
+    {
+        if (coord.x < 0 || coord.x >= 10 || coord.y < 0 || coord.y >= 10)
+        {
+            throw ExceptionShipOutOfBounds();
+        }
+    }
+    
+    // Now we'll check to see if this new ship overlaps with any other.
+    // Loop through each existing ship:
     for (auto ship : ships)
     {
-        
+        // And each coordinate of the new ship:
+        for (auto coord : newShip.getCoordinatesContained())
+        {
+            // And see if any overlap:
+            if (ship.containsCoordinate(coord))
+            {
+                // If they do then the space
+                // is already occupied.
+                throw ExceptionShipPlacementOccupied();
+            }
+        }
     }
+    
+    ships.push_back(newShip);
 }
 
 void Game::readShips(Board &board)

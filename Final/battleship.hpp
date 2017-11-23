@@ -31,6 +31,7 @@ struct Coordinate
 {
     int x;
     int y;
+    Coordinate(int _x, int _y) : x(_x), y(_y) { }
 };
 
 class ExceptionShotCoordinateOccupied { };
@@ -54,8 +55,11 @@ public:
     bool attack(Coordinate c);
     inline void setPosX(int x) { posX = x; }
     inline void setPosY(int y) { posY = y; }
-    void setLength(int len);
+    inline int getLength() { return length; }
     inline void setOrientation(char o) { orientation = o; }
+    inline char getOrientation() { return orientation; }
+    inline Coordinate getPosition() { return Coordinate(posX, posY); }
+    vector<Coordinate> getCoordinatesContained();
     bool containsCoordinate(Coordinate);
 };
 
