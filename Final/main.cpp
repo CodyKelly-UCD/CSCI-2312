@@ -1,4 +1,4 @@
-#include "battleship.hpp"
+#include "game.hpp"
 
 int main()
 {
