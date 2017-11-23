@@ -6,8 +6,6 @@
 
 #include "battleship.hpp"
 
-using namespace std;
-
 const string title = "  ██████╗  █████╗ ████████╗████████╗██╗     ███████╗███████╗██╗  ██╗██╗██████╗ \n  ██╔══██╗██╔══██╗╚══██╔══╝╚══██╔══╝██║     ██╔════╝██╔════╝██║  ██║██║██╔══██╗\n  ██████╔╝███████║   ██║      ██║   ██║     █████╗  ███████╗███████║██║██████╔╝\n  ██╔══██╗██╔══██║   ██║      ██║   ██║     ██╔══╝  ╚════██║██╔══██║██║██╔═══╝ \n  ██████╔╝██║  ██║   ██║      ██║   ███████╗███████╗███████║██║  ██║██║██║     \n  ╚═════╝ ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝╚═╝     \n                                                                               \n";
 
 int getMenuChoice(int numChoices, string message = "")
@@ -52,13 +50,15 @@ string getStringInput()
     return input;
 }
 
-void makeLowercase(string &s)
+string to_lowercase(string s)
 {
     // Converts all uppercase letters in a string to lowercase letters
     for (auto c : s)
     {
         c = tolower(c);
     }
+    
+    return s;
 }
 
 void clearScreen()
@@ -77,9 +77,9 @@ void clearScreen()
  Ship Implementation
  */
 
-Ship::Ship(string name, int len, int x, int y, bool horiz) : length(len), posX(x), posY(y), horizontal(horiz), hits(len) {}
+Ship::Ship(string name, int len, int x, int y, char o) : length(len), posX(x), posY(y), orientation(o), hits(len) {}
 
-Ship::Ship(string n, int len) : length(len), posX(0), posY(0), horizontal(true), hits(len), name(n) {}
+Ship::Ship(string n, int len) : length(len), posX(0), posY(0), orientation('H'), hits(len), name(n) {}
 
 int Ship::getNumberOfHits() const
 {
@@ -101,12 +101,12 @@ bool Ship::attack(Coordinates c)
     bool hit = false;
     
     // Check if shot is a hit
-    if (horizontal && c.y == posY && c.x >= posX && c.x < posX + length)
+    if (orientation == HORIZONTAL && c.y == posY && c.x >= posX && c.x < posX + length)
     {
         hits[c.x - posX] = true;
         hit = true;
     }
-    else if (!horizontal && c.x == posX && c.y >= posY && c.y < posY + length)
+    else if (orientation == VERTICAL && c.x == posX && c.y >= posY && c.y < posY + length)
     {
         hits[c.y - posY] = true;
         hit = true;
@@ -136,42 +136,36 @@ void Board::setPlayerType(PlayerType p) { playerType = p; }
 void Board::attack(Coordinates c)
 {
     bool hit = false;
-    try
+    
+    if (getValue(c.x, c.y) == EMPTY)
     {
-        if (getValue(c.x, c.y) == ' ')
+        // If any of the ships report a hit, change the board value
+        // and return true
+        for (auto ship : ships)
         {
-            // If any of the ships report a hit, change the board value
-            // and return true
-            for (auto ship : ships)
+            if (ship.attack(c))
             {
-                if (ship.attack(c))
-                {
-                    setValue(c.x, c.y, HITCHAR);
-                    hit = true;
-                    break;
-                }
-            }
-            
-            // If no ships report a hit, mark it as misss
-            if (!hit)
-            {
-                setValue(c.x, c.y, MISSCHAR);
+                setValue(c.x, c.y, HIT);
+                hit = true;
+                break;
             }
         }
-        else
-        {
-            throw ShotAlreadyFired(c);
-        }
-    }
-    catch (ShotAlreadyFired shot)
-    {
-        // If the coordinates given have already been tried, tell the user and return
-        // the value already on the board.
         
-        Coordinates c = shot.getCoordinates();
-        cout << "These coordinates have already been tried. Enter another.\n";
-        hit = getValue(c.x, c.y) == 'h';
+        // If no ships report a hit, mark it as misss
+        if (!hit)
+        {
+            setValue(c.x, c.y, MISS);
+        }
     }
+    else
+    {
+        throw ExceptionInvalidShot();
+    }
+}
+
+void Board::addShip(Ship newShip)
+{
+    
 }
 
 void Game::readShips(Board &board)
@@ -182,14 +176,18 @@ void Game::readShips(Board &board)
     {
         string name;
         char x, y;
-        bool horizontal;
+        char orientation;
         
         getline(file, name, ',');
+        name = to_lowercase(name);
         
         file >> x;
         file >> y;
+        file.ignore(); // ignore comma
         
+        file >> orientation;
         
+        file.close();
     }
 }
 
@@ -199,8 +197,6 @@ void Game::start()
     // It prints the title, creates boards of specific types
     // (human or computer), gets the names of the players, and when the game
     // is over it asks if the players would like to play again.
-    
-    int choice;
     
     // Display title
     clearScreen();

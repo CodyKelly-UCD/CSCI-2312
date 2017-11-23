@@ -8,9 +8,11 @@
 
 #include "grid.hpp"
 
-using namespace std;
-
-const char HITCHAR = 'h', MISSCHAR = 'm';
+const char HIT = 'h',
+           MISS = 'm',
+           EMPTY = ' ',
+           HORIZONTAL = 'H',
+           VERTICAL = 'V';
 
 struct Coordinates
 {
@@ -18,25 +20,21 @@ struct Coordinates
     int y;
 };
 
-class ShotAlreadyFired
-{
-private:
-    Coordinates coordinates;
-public:
-    inline ShotAlreadyFired(Coordinates c) : coordinates(c) {}
-    inline Coordinates getCoordinates() { return coordinates; }
-};
+class ExceptionInvalidShot { };
+
+class ExceptionInvalidShipPlacement { };
 
 class Ship
 {
 private:
     int length = 0, posX = 0, posY = 0;
-    bool horizontal = false, sunk = false;
+    char orientation;
+    bool sunk = false;
     vector<bool> hits;
     string name;
     
 public:
-    Ship(string, int, int, int, bool);
+    Ship(string, int, int, int, char);
     Ship(string, int);
     inline bool getSunk() const { return sunk; }
     int getNumberOfHits() const;
@@ -44,7 +42,7 @@ public:
     inline void setPosX(int x) { posX = x; }
     inline void setPosY(int y) { posY = y; }
     void setLength(int len);
-    inline void setHorizontal(bool h) { horizontal = h; }
+    inline void setOrientation(char o) { orientation = o; }
 };
 
 class Board : public Grid
