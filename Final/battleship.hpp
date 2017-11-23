@@ -8,13 +8,16 @@
 
 #include "grid.hpp"
 
+using std::string;
+using std::pair;
+
 const char HIT = 'h',
            MISS = 'm',
            EMPTY = ' ',
            HORIZONTAL = 'H',
            VERTICAL = 'V';
 
-const std::pair<string, int> SHIPS[] =
+const pair<string, int> SHIPS[] =
 {
     // Pairing ship names with lengths
     pair<string, int>("Carrier", 5),
@@ -24,13 +27,13 @@ const std::pair<string, int> SHIPS[] =
     pair<string, int>("Destroyer", 2)
 };
 
-struct Coordinates
+struct Coordinate
 {
     int x;
     int y;
 };
 
-class ExceptionShotCoordinatesOccupied { };
+class ExceptionShotCoordinateOccupied { };
 class ExceptionShipPlacementOccupied { };
 class ExceptionShipOutOfBounds { };
 class ExceptionInvalidShipName { };
@@ -48,24 +51,26 @@ public:
     Ship(string, int, int, char);
     inline bool getSunk() const { return sunk; }
     int getNumberOfHits() const;
-    bool attack(Coordinates c);
+    bool attack(Coordinate c);
     inline void setPosX(int x) { posX = x; }
     inline void setPosY(int y) { posY = y; }
     void setLength(int len);
     inline void setOrientation(char o) { orientation = o; }
+    bool containsCoordinate(Coordinate);
 };
 
-class Board : public Grid
+class Board
 {
 public:
     enum PlayerType { Human, Computer };
-    inline Board() : Grid(10, 10) { }
+    inline Board() { }
     Board(PlayerType);
-    void attack(Coordinates c);
+    bool attack(Coordinate c);
     void addShip(Ship newShip);
     void setPlayerType(PlayerType);
     void setName(string);
 private:
+    Grid shotGrid;
     string playerName;
     vector<Ship> ships;
     PlayerType playerType;
@@ -78,8 +83,10 @@ private:
     bool singlePlayer = true;
     Board* boards[2]; // Holds board for both players
     void randomizeShips(Board&);
-    Coordinates getPlayerAttack(Board);
-    Coordinates getAIAttack(Board[2]);
+    Coordinate getPlayerAttack(Board);
+    Coordinate getAIAttack(Board[2]);
+    Ship getShipFromPlayer(string, Board);
+    Ship getShipRandomly(string, Board);
     void readShips(Board&);
     void run();
 public:

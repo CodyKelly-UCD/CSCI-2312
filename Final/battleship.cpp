@@ -115,7 +115,7 @@ int Ship::getNumberOfHits() const
     return count;
 }
 
-bool Ship::attack(Coordinates c)
+bool Ship::attack(Coordinate c)
 {
     bool hit = false;
     
@@ -140,23 +140,17 @@ bool Ship::attack(Coordinates c)
     return hit;
 }
 
-void Ship::setLength(int len)
-{
-    length = len;
-    hits.resize(len);
-};
-
-Board::Board(PlayerType p) : Grid(10, 10), playerType(p) { }
+Board::Board(PlayerType p) : playerType(p) { }
 
 void Board::setName(string n) { playerName = n; }
 
 void Board::setPlayerType(PlayerType p) { playerType = p; }
 
-void Board::attack(Coordinates c)
+bool Board::attack(Coordinate c)
 {
     bool hit = false;
     
-    if (getValue(c.x, c.y) == EMPTY)
+    if (shotGrid.getValue(c.x, c.y) == EMPTY)
     {
         // If any of the ships report a hit, change the board value
         // and return true
@@ -164,27 +158,30 @@ void Board::attack(Coordinates c)
         {
             if (ship.attack(c))
             {
-                setValue(c.x, c.y, HIT);
+                shotGrid.setValue(c.x, c.y, HIT);
                 hit = true;
                 break;
             }
         }
         
-        // If no ships report a hit, mark it as misss
+        // If no ships report a hit, mark it as miss
         if (!hit)
         {
-            setValue(c.x, c.y, MISS);
+            shotGrid.setValue(c.x, c.y, MISS);
         }
+        
+        return true; // attack was completed
     }
-    else
-    {
-        throw ExceptionShotCoordinatesOccupied();
-    }
+    
+    return false; // attack failed, player needs to try again
 }
 
 void Board::addShip(Ship newShip)
 {
-    
+    for (auto ship : ships)
+    {
+        
+    }
 }
 
 void Game::readShips(Board &board)
@@ -218,7 +215,31 @@ void Game::readShips(Board &board)
         {
             clearScreen();
             std::cout << "The " << name << " from the file was out of bounds.\n\n"
-            << "Would you like to:\n1) Choose";
+            << "Would you like to:\n1) Enter a new position\n2) Get a random position";
+            
+            if (getMenuChoice(2) == 1)
+            {
+                board.addShip(getShipFromPlayer(name, board));
+            }
+            else
+            {
+                board.addShip(getShipRandomly(name, board));
+            }
+        }
+        catch (ExceptionShipPlacementOccupied)
+        {
+            clearScreen();
+            std::cout << "The position for the " << name << " read in from the file was occupied by another ship.\n\n"
+            << "Would you like to:\n1) Enter a new position\n2) Get a random position";
+            
+            if (getMenuChoice(2) == 1)
+            {
+                board.addShip(getShipFromPlayer(name, board));
+            }
+            else
+            {
+                board.addShip(getShipRandomly(name, board));
+            }
         }
     }
 }
