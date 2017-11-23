@@ -77,7 +77,7 @@ void clearScreen()
  Ship Implementation
  */
 
-Ship::Ship(string name, int x, int y, char o) : posX(x), posY(y), orientation(o)
+Ship::Ship(string n, int x, int y, char o) : name(n), posX(x), posY(y), orientation(o)
 {
     // We try to match the name given to our ship to a ship in our SHIPS array
     // so we can set our ship to the desired length.
@@ -159,6 +159,19 @@ vector<Coordinate> Ship::getCoordinatesContained()
     return coordinates;
 }
 
+bool Ship::containsCoordinate(Coordinate coord1)
+{
+    for (auto coord2 : getCoordinatesContained())
+    {
+        if (coord1.x == coord2.x && coord2.y == coord1.y)
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
 Board::Board(PlayerType p) : playerType(p) { }
 
 void Board::setName(string n) { playerName = n; }
@@ -226,12 +239,16 @@ void Board::addShip(Ship newShip)
     ships.push_back(newShip);
 }
 
-void Game::readShips(Board &board)
+Ship Game::getShipFromPlayer(string, Board*) { return Ship("", 1, 1, '1'); }
+
+Ship Game::getShipRandomly(string, Board*) { return Ship("", 1, 1, '1'); }
+
+void Game::readShips(Board *board)
 {
     ifstream file("./ship_placement.csv");
-    file.ignore(1, '\n'); // ignore first line
+    file.ignore(256, '\n'); // ignore first line
     
-    for (int shipCount = 5; shipCount > 0; shipCount++)
+    for (int shipCount = 5; shipCount > 0; shipCount--)
     {
         string name;
         char x, y;
@@ -245,13 +262,13 @@ void Game::readShips(Board &board)
         file.ignore(); // ignore comma
         
         file >> orientation;
-        file.ignore(); // go to next line
+        file.ignore(2); // go to next line
         
         Ship newShip = Ship(name, int(x - 'A'), int(y - '1'), orientation);
         
         try
         {
-            board.addShip(newShip);
+            board->addShip(newShip);
         }
         catch (ExceptionShipOutOfBounds)
         {
@@ -261,11 +278,11 @@ void Game::readShips(Board &board)
             
             if (getMenuChoice(2) == 1)
             {
-                board.addShip(getShipFromPlayer(name, board));
+                board->addShip(getShipFromPlayer(name, board));
             }
             else
             {
-                board.addShip(getShipRandomly(name, board));
+                board->addShip(getShipRandomly(name, board));
             }
         }
         catch (ExceptionShipPlacementOccupied)
@@ -276,11 +293,11 @@ void Game::readShips(Board &board)
             
             if (getMenuChoice(2) == 1)
             {
-                board.addShip(getShipFromPlayer(name, board));
+                board->addShip(getShipFromPlayer(name, board));
             }
             else
             {
-                board.addShip(getShipRandomly(name, board));
+                board->addShip(getShipRandomly(name, board));
             }
         }
     }
@@ -320,7 +337,7 @@ void Game::start()
             name = getStringInput();
             boards[0] -> setName(name);
             
-            
+            readShips(boards[0]);
         }
         else
         {
@@ -357,8 +374,10 @@ void Game::run()
 {
     bool gameOver = false;
     
+    
+    
     while (!gameOver)
     {
-        
+        gameOver = true;
     }
 }

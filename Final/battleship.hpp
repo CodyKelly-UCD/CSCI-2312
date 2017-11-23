@@ -89,9 +89,9 @@ private:
     void randomizeShips(Board&);
     Coordinate getPlayerAttack(Board);
     Coordinate getAIAttack(Board[2]);
-    Ship getShipFromPlayer(string, Board);
-    Ship getShipRandomly(string, Board);
-    void readShips(Board&);
+    Ship getShipFromPlayer(string, Board*);
+    Ship getShipRandomly(string, Board*);
+    void readShips(Board*);
     void run();
 public:
     inline Game() { }
