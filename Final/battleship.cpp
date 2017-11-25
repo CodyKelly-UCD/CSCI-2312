@@ -11,7 +11,7 @@ const char  HIT = 'h',
 
 bool debug = false;
 
-const pair<string, int> SHIPS[] =
+const pair<string, int> SHIPTYPES[] =
 {
     // Pairing ship names with lengths
     pair<string, int>("Carrier", 5),
@@ -65,7 +65,7 @@ string getStringInput()
     return input;
 }
 
-string to_lowercase(string s)
+string toLowercase(string s)
 {
     // Converts all uppercase letters in a string to lowercase letters
     for (auto c : s)
@@ -95,7 +95,7 @@ int getShipLengthFromName(string name)
     bool validName = false;
     int length = 0;
     
-    for (auto ship : SHIPS)
+    for (auto ship : SHIPTYPES)
     {
         if (ship.first == name)
         {

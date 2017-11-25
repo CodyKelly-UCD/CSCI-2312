@@ -171,9 +171,43 @@ void Game::start()
         boards[0] -> setName(name);
         
         clearScreen();
+        cout << "Would you like to: \n";
+        cout << "1) Choose ship locations manually or";
+        cout << "2) Randomize ship locations";
+        
+        if (getMenuChoice(2) == 1)
+        {
+            for (auto ship : SHIPTYPES)
+            {
+                addShipFromPlayer(ship.first, boards[0]);
+            }
+        }
+        else
+        {
+            randomizeShips(boards[0]);
+        }
+        
+        clearScreen();
         cout << "Player 2, please enter your name: ";
         name = getStringInput();
         boards[0] -> setName(name);
+        
+        clearScreen();
+        cout << "Would you like to: \n";
+        cout << "1) Choose ship locations manually or";
+        cout << "2) Randomize ship locations";
+        
+        if (getMenuChoice(2) == 1)
+        {
+            for (auto ship : SHIPTYPES)
+            {
+                addShipFromPlayer(ship.first, boards[1]);
+            }
+        }
+        else
+        {
+            randomizeShips(boards[1]);
+        }
     }
     
     // Now that the game is set up, we may run it.
