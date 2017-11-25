@@ -24,6 +24,8 @@ void Game::addShipRandomly(string name, Board* board)
     
     do
     {
+        valid = true;
+        
         int orientation = rand() % 2;
         int x = 0, y = 0;
         
@@ -136,92 +138,105 @@ void Game::start()
     
     srand(int(time(NULL)));
     
-    // Display main menu
-    clearScreen();
-    cout << "\n\nWelcome to Battleship!\n\n";
-    cout << "Main Menu\n1) Single player game\n2) Two player game";
-    singlePlayer = getMenuChoice(2) == 1;
-    clearScreen();
-    
-    if(singlePlayer)
+    if (!debug)
     {
-        // Setup single player game
-        string name;
-        boards[0] = new Board(Board::PlayerType::Human), boards[1] = new Board(Board::PlayerType::Computer);
+        // Display title
+        clearScreen();
+        cout << title;
+        cout << setw(44) << "Cody Kelly" << endl;
+        cout << setw(43) << "© 2017" << endl << endl;
+        cout << "Press enter to continue.\n\n";
+        cin.get();
+    }
+    
+    do
+    {
+        // Display main menu
+        clearScreen();
+        cout << "\n\nWelcome to Battleship!\n\n";
+        cout << "Main Menu\n1) Single player game\n2) Two player game";
+        singlePlayer = getMenuChoice(2) == 1;
+        clearScreen();
         
-        if (!debug)
+        if(singlePlayer)
         {
-            cout << "Please enter your name: ";
+            // Setup single player game
+            string name;
+            boards[0] = new Board(Board::PlayerType::Human), boards[1] = new Board(Board::PlayerType::Computer);
+            
+            if (!debug)
+            {
+                cout << "Please enter your name: ";
+                name = getStringInput();
+                boards[0] -> setName(name);
+            }
+                
+            readShips(boards[0]); // Read ships from file for player
+            randomizeShips(boards[1]); // Get a random ship layout for AI
+        }
+        else
+        {
+            // Setup multiplayer game
+            string name;
+            
+            boards[0] = new Board(Board::PlayerType::Human), boards[1] = new Board(Board::PlayerType::Human);
+            
+            cout << "Player 1, please enter your name: ";
             name = getStringInput();
             boards[0] -> setName(name);
-        }
             
-        readShips(boards[0]); // Read ships from file for player
-        randomizeShips(boards[1]); // Get a random ship layout for AI
-    }
-    else
-    {
-        // Setup multiplayer game
-        string name;
-        
-        boards[0] = new Board(Board::PlayerType::Human), boards[1] = new Board(Board::PlayerType::Human);
-        
-        cout << "Player 1, please enter your name: ";
-        name = getStringInput();
-        boards[0] -> setName(name);
-        
-        clearScreen();
-        cout << "Would you like to: \n";
-        cout << "1) Choose ship locations manually or";
-        cout << "2) Randomize ship locations";
-        
-        if (getMenuChoice(2) == 1)
-        {
-            for (auto ship : SHIPTYPES)
+            clearScreen();
+            cout << "Would you like to: \n";
+            cout << "1) Choose ship locations manually or\n";
+            cout << "2) Randomize ship locations";
+            
+            if (getMenuChoice(2) == 1)
             {
-                addShipFromPlayer(ship.first, boards[0]);
+                for (auto ship : SHIPTYPES)
+                {
+                    addShipFromPlayer(ship.first, boards[0]);
+                }
+            }
+            else
+            {
+                randomizeShips(boards[0]);
+            }
+            
+            clearScreen();
+            cout << "Player 2, please enter your name: ";
+            name = getStringInput();
+            boards[0] -> setName(name);
+            
+            clearScreen();
+            cout << "Would you like to: \n";
+            cout << "1) Choose ship locations manually or\n";
+            cout << "2) Randomize ship locations";
+            
+            if (getMenuChoice(2) == 1)
+            {
+                for (auto ship : SHIPTYPES)
+                {
+                    addShipFromPlayer(ship.first, boards[1]);
+                }
+            }
+            else
+            {
+                randomizeShips(boards[1]);
             }
         }
-        else
+        
+        // Now that the game is set up, we may run it.
+        run();
+        
+        // Delete all board pointers in boards array
+        for (auto boardPointer : boards)
         {
-            randomizeShips(boards[0]);
+            delete boardPointer;
         }
         
         clearScreen();
-        cout << "Player 2, please enter your name: ";
-        name = getStringInput();
-        boards[0] -> setName(name);
         
-        clearScreen();
-        cout << "Would you like to: \n";
-        cout << "1) Choose ship locations manually or";
-        cout << "2) Randomize ship locations";
-        
-        if (getMenuChoice(2) == 1)
-        {
-            for (auto ship : SHIPTYPES)
-            {
-                addShipFromPlayer(ship.first, boards[1]);
-            }
-        }
-        else
-        {
-            randomizeShips(boards[1]);
-        }
-    }
-    
-    // Now that the game is set up, we may run it.
-    run();
-    
-    cout << *boards[0];
-    
-    // Delete all board pointers in boards array
-    for (auto boardPointer : boards)
-    {
-        delete boardPointer;
-    }
-    
-    clearScreen();
+    } while (getMenuChoice(2, "Would you like to play again?\n1) Yes\n2) No") == 1);
 }
 
 void Game::run()
