@@ -1,6 +1,16 @@
 #include "board.hpp"
 
-Board::Board(PlayerType p) : playerType(p) { }
+Board::Board()
+{
+    shotGrid = Grid(10, 10);
+    shipGrid = Grid(10, 10);
+}
+
+Board::Board(PlayerType p) : playerType(p)
+{
+    shotGrid = Grid(10, 10);
+    shipGrid = Grid(10, 10);
+}
 
 void Board::setName(string n) { playerName = n; }
 
@@ -36,7 +46,7 @@ bool Board::attack(Coordinate c)
     return false; // attack failed, player needs to try again
 }
 
-void Board::addShip(Ship newShip)
+void Board::addShip(const Ship newShip)
 {
     // First we'll check to see if the ship extends off the board
     for (auto coord : newShip.getCoordinatesContained())
@@ -64,5 +74,17 @@ void Board::addShip(Ship newShip)
         }
     }
     
+    for (auto coord : newShip.getCoordinatesContained())
+    {
+        shipGrid.setValue(coord.x, coord.y, newShip.getName()[0]);
+    }
+    
     ships.push_back(newShip);
+}
+
+ostream& operator<< (ostream &os, const Board &board)
+{
+    os << board.shotGrid << endl << board.shipGrid;
+    
+    return os;
 }

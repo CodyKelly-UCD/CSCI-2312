@@ -11,7 +11,7 @@ CXXFLAGS = -g -std=c++11
 
 LIBS = -lm
 
-OBJS = main.o grid.o game.o board.o battleship.o
+OBJS = main.o grid.o game.o board.o battleship.o ship.o
 
 TARGET = main.out
 

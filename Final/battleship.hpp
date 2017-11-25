@@ -12,8 +12,10 @@ using std::cin;
 using std::endl;
 
 extern const char HIT, MISS, EMPTY, HORIZONTAL, VERTICAL;
+extern const pair<string, int> SHIPTYPES[5];
+extern const string title;
 
-extern const pair<string, int> SHIPS[5];
+extern bool debug;
 
 struct Coordinate
 {
@@ -27,14 +29,11 @@ class ExceptionShipPlacementOccupied { };
 class ExceptionShipOutOfBounds { };
 class ExceptionInvalidShipName { };
 
-extern const string title;
-
 int getMenuChoice(int numChoices, string message = "");
-
 string getStringInput();
-
-string to_lowercase(string s);
-
+string toLowercase(string s);
 void clearScreen();
+int getShipLengthFromName(string);
+void displayTitle();
 
 #endif /* battleship_hpp */

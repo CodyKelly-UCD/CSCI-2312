@@ -15,14 +15,16 @@ class Board
 {
 public:
     enum PlayerType { Human, Computer };
-    inline Board() { }
+    Board();
     Board(PlayerType);
     bool attack(Coordinate c);
     void addShip(Ship newShip);
     void setPlayerType(PlayerType);
     void setName(string);
+    friend ostream& operator<< (ostream&, const Board&);
 private:
     Grid shotGrid;
+    Grid shipGrid;
     string playerName;
     vector<Ship> ships;
     PlayerType playerType;

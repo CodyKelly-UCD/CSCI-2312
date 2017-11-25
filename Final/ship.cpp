@@ -2,26 +2,11 @@
 
 Ship::Ship(string n, int x, int y, char o) : name(n), posX(x), posY(y), orientation(o)
 {
-    // We try to match the name given to our ship to a ship in our SHIPS array
-    // so we can set our ship to the desired length.
-    bool lengthSet = false;
-    
-    for (auto ship : SHIPS)
-    {
-        if (ship.first == name)
-        {
-            length = ship.second;
-            hits.resize(ship.second);
-            lengthSet = true;
-        }
-    }
-    
-    // If the name given doesn't match up to anything, that's bad, m'kay.
-    if (!lengthSet)
-    {
-        throw ExceptionInvalidShipName();
-    }
+    length = getShipLengthFromName(name);
+    hits.resize(length);
 }
+
+Ship::Ship() { }
 
 int Ship::getNumberOfHits() const
 {
@@ -63,7 +48,13 @@ bool Ship::attack(Coordinate c)
     return hit;
 }
 
-vector<Coordinate> Ship::getCoordinatesContained()
+void Ship::setLength(int l)
+{
+    length = l;
+    hits.resize(l);
+}
+
+vector<Coordinate> Ship::getCoordinatesContained() const
 {
     vector<Coordinate> coordinates;
     

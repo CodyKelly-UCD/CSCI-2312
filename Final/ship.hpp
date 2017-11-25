@@ -20,17 +20,22 @@ private:
     
 public:
     Ship(string, int, int, char);
+    Ship();
+    inline string getName() const { return name; }
+    inline void setName(string n) { name = n; }
     inline bool getSunk() const { return sunk; }
     int getNumberOfHits() const;
     bool attack(Coordinate c);
     inline void setPosX(int x) { posX = x; }
     inline void setPosY(int y) { posY = y; }
-    inline int getLength() { return length; }
+    inline int getLength() const { return length; }
+    void setLength(int);
     inline void setOrientation(char o) { orientation = o; }
-    inline char getOrientation() { return orientation; }
+    inline char getOrientation() const { return orientation; }
     inline Coordinate getPosition() { return Coordinate(posX, posY); }
-    vector<Coordinate> getCoordinatesContained();
+    vector<Coordinate> getCoordinatesContained() const;
     bool containsCoordinate(Coordinate);
+    inline vector<bool> getHits() { return hits; }
 };
 
 #endif /* ship_hpp */

@@ -1,3 +1,5 @@
+#include <iomanip>
+
 #include "battleship.hpp"
 
 
@@ -6,6 +8,8 @@ const char  HIT = 'h',
             EMPTY = ' ',
             HORIZONTAL = 'H',
             VERTICAL = 'V';
+
+bool debug = false;
 
 const pair<string, int> SHIPS[] =
 {
@@ -81,5 +85,43 @@ void clearScreen()
     {
         cout << endl;
         count--;
+    }
+}
+
+int getShipLengthFromName(string name)
+{
+    // We try to match the name given to our ship to a ship in our SHIPS array
+    // so we can set our ship to the desired length.
+    bool validName = false;
+    int length = 0;
+    
+    for (auto ship : SHIPS)
+    {
+        if (ship.first == name)
+        {
+            length = ship.second;
+            validName = true;
+        }
+    }
+    
+    // If the name given doesn't match up to anything, that's bad, m'kay.
+    if (!validName)
+    {
+        throw ExceptionInvalidShipName();
+    }
+    
+    return length;
+}
+
+void displayTitle()
+{
+    if (!debug)
+    {
+        clearScreen();
+        cout << title;
+        cout << std::setw(44) << "Cody Kelly" << endl;
+        cout << std::setw(43) << "© 2017" << endl << endl;
+        cout << "Press enter to continue.\n\n";
+        cin.get();
     }
 }
