@@ -21,6 +21,7 @@ public:
     void addShip(Ship newShip);
     void setPlayerType(PlayerType);
     void setName(string);
+    bool getLost();
     friend ostream& operator<< (ostream&, const Board&);
 private:
     Grid shotGrid;

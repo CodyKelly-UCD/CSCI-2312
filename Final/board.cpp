@@ -82,6 +82,23 @@ void Board::addShip(const Ship newShip)
     ships.push_back(newShip);
 }
 
+bool Board::getLost()
+{
+    // seriously, get lost.
+    // Whoops, I mean, this function returns true if
+    // all ships on this board are sunk.
+    
+    for (auto ship : ships)
+    {
+        if (!ship.getSunk())
+        {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
 ostream& operator<< (ostream &os, const Board &board)
 {
     os << board.shotGrid << endl << board.shipGrid;
