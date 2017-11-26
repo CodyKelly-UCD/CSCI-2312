@@ -118,24 +118,36 @@ void Game::readShips(Board *board)
     file.close();
 }
 
-void Game::randomizeShips(Board *board)
+void Game::randomizeShips(Board *board, bool displayChoice = true)
 {
     // Adds one ship of each kind to a random location
     // on the given board.
     
-    do
+    if (displayChoice)
     {
-        clearScreen();
+        do
+        {
+            clearScreen();
+            board->removeShips();
+            
+            for (auto ship : SHIPTYPES)
+            {
+                addShipRandomly(ship.first, board);
+            }
+            
+            board->printShipGrid();
+            
+        } while (getMenuChoice(2, "\nWould you like to keep these positions or generate a new fleet?\n1) Keep positions\n2) Generate new ships") == 2);
+    }
+    else
+    {
         board->removeShips();
         
         for (auto ship : SHIPTYPES)
         {
             addShipRandomly(ship.first, board);
         }
-        
-        board->printShipGrid();
-        
-    } while (getMenuChoice(2, "\nWould you like to keep these positions or generate a new fleet?\n1) Keep positions\n2) Generate new ships") == 2);
+    }
 }
 
 void Game::start()
@@ -180,10 +192,30 @@ void Game::start()
                 boards[0]->setName(name);
             }
             
+            clearScreen();
+            cout << "Please choose difficulty:\n1) Easy\n2) Normal\n3) Hard";
+            int choice = getMenuChoice(3);
+            
+            switch (choice)
+            {
+                case 1:
+                    currentDifficulty = Difficulty::Easy;
+                    break;
+                    
+                case 2:
+                    currentDifficulty = Difficulty::Normal;
+                    
+                case 3:
+                    currentDifficulty = Difficulty::Hard;
+                    
+                default:
+                    break;
+            }
+            
             boards[1]->setName("Computer");
                 
             readShips(boards[0]); // Read ships from file for player
-            randomizeShips(boards[1]); // Get a random ship layout for AI
+            randomizeShips(boards[1], false); // Get a random ship layout for AI
         }
         else
         {
@@ -250,8 +282,181 @@ void Game::start()
     } while (getMenuChoice(2, "Would you like to play again?\n1) Yes\n2) No") == 1);
 }
 
+ShotResult Game::AIAttack(int attackerIndex)
+{
+    // This function calculates an attack coordinate for the computer player
+    
+    ShotResult result;
+    bool validCoordinate = true;
+    int otherPlayerIndex;
+    
+    if (attackerIndex == 0)
+    {
+        otherPlayerIndex = 1;
+    }
+    else
+    {
+        otherPlayerIndex = 0;
+    }
+    
+    switch (currentDifficulty)
+    {
+        case Easy:
+        {
+            do
+            {
+                validCoordinate = true;
+                
+                // Get random coordinates
+                int x = rand() % 10;
+                int y = rand() % 10;
+                
+                // Try attack
+                try
+                {
+                    result = boards[otherPlayerIndex]->attack(Coordinate(x, y));
+                }
+                catch (ExceptionShotCoordinateOccupied)
+                {
+                    validCoordinate = false;
+                }
+            } while (!validCoordinate);
+            
+            break;
+        }
+            
+        case Normal:
+        {
+            int randNum = rand() % 100;
+            
+            if (randNum <= HITCHANCENORMAL) // If we're guaranteed a hit
+            {
+                do
+                {
+                    validCoordinate = true;
+                    
+                    int randShipNum = rand() % 5;
+                    
+                    // First we get a vector containing all the ships on the
+                    // other person's board
+                    vector<Ship*> ships = boards[otherPlayerIndex]->getShips();
+                    
+                    // Then we get a random ship from that vector
+                    Ship* ship = ships[randShipNum];
+                    
+                    // Now we choose a random coordinate within that ship
+                    int randShipCoordinateIndex = rand() % ship->getLength();
+                    Coordinate randCoord = ship->getCoordinatesContained()[randShipCoordinateIndex];
+                    
+                    // Then we attack that coordinate
+                    try
+                    {
+                        result = boards[otherPlayerIndex]->attack(randCoord);
+                    }
+                    catch (ExceptionShotCoordinateOccupied)
+                    {
+                        validCoordinate = false;
+                    }
+                    
+                } while (!validCoordinate);
+            }
+            else // otherwise, pick a random coordinate
+            {
+                do
+                {
+                    validCoordinate = true;
+                    
+                    // Get random coordinates
+                    int x = rand() % 10;
+                    int y = rand() % 10;
+                    
+                    // Try attack
+                    try
+                    {
+                        result = boards[otherPlayerIndex]->attack(Coordinate(x, y));
+                    }
+                    catch (ExceptionShotCoordinateOccupied)
+                    {
+                        validCoordinate = false;
+                    }
+                } while (!validCoordinate);
+            }
+            
+            break;
+        }
+            
+        case Hard:
+        {
+            int randNum = rand() % 100;
+            
+            if (randNum <= HITCHANCEHARD) // If we're guaranteed a hit
+            {
+                do
+                {
+                    validCoordinate = true;
+                    
+                    int randShipNum = rand() % 5;
+                    
+                    // First we get a vector containing all the ships on the
+                    // other person's board
+                    vector<Ship*> ships = boards[otherPlayerIndex]->getShips();
+                    
+                    // Then we get a random ship from that vector
+                    Ship* ship = ships[randShipNum];
+                    
+                    // Now we choose a random coordinate within that ship
+                    int randShipCoordinateIndex = rand() % ship->getLength();
+                    Coordinate randCoord = ship->getCoordinatesContained()[randShipCoordinateIndex];
+                    
+                    // Then we attack that coordinate
+                    try
+                    {
+                        result = boards[otherPlayerIndex]->attack(randCoord);
+                    }
+                    catch (ExceptionShotCoordinateOccupied)
+                    {
+                        validCoordinate = false;
+                    }
+                    
+                } while (!validCoordinate);
+            }
+            else // otherwise, pick a random coordinate
+            {
+                do
+                {
+                    validCoordinate = true;
+                    
+                    // Get random coordinates
+                    int x = rand() % 10;
+                    int y = rand() % 10;
+                    
+                    // Try attack
+                    try
+                    {
+                        result = boards[otherPlayerIndex]->attack(Coordinate(x, y));
+                    }
+                    catch (ExceptionShotCoordinateOccupied)
+                    {
+                        validCoordinate = false;
+                    }
+                } while (!validCoordinate);
+            }
+            
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    return result;
+}
+
 ShotResult Game::playerAttack(int attackerIndex)
 {
+    // This function asks user for a coordinate, then returns the result
+    // of attacking that coordinate
+    
     Coordinate coord;
     bool validCoordinate = true;
     int otherPlayerIndex;
@@ -343,7 +548,68 @@ void Game::run()
     {
         if (singlePlayer)
         {
+            clearScreen();
             
+            // First tell the player where the other player shot last.
+            if (turnNumber != 1)
+            {
+                cout << "Last enemy shot: " << char('A' + lastShot.shotPosition.x) << lastShot.shotPosition.y + 1;
+                
+                if (lastShot.sunk)
+                {
+                    cout << "\nThey sank your " << toLowercase(lastShot.shipName) << "!";
+                }
+                else if(lastShot.hit)
+                {
+                    cout << "\nThey hit your " << toLowercase(lastShot.shipName) << "!";
+                }
+                
+                cout << endl << endl;
+            }
+            
+            // Display grids for player
+            cout << *boards[0] << endl;
+            
+            // Get the player's choice for a shot and process it
+            ShotResult shotResult = playerAttack(0);
+            boards[0]->markShot(shotResult.shotPosition, shotResult.hit);
+            
+            // Give the player shot results..
+            clearScreen();
+            if (shotResult.hit)
+            {
+                cout << "\aHit!";
+                
+                if (shotResult.sunk)
+                {
+                    cout << "\nYou sank their " << toLowercase(shotResult.shipName) << "!";
+                }
+            }
+            else
+            {
+                cout << "Miss.";
+            }
+            
+            cout << "\n\nPress enter to continue.";
+            cin.ignore();
+            cin.get();
+            
+            // If the other player lost, then the current one won!
+            if (boards[1]->getLost())
+            {
+                clearScreen();
+                cout << "Congratulations, " << boards[0]->getName()
+                << "! You've sunk the enemy's entire fleet in "
+                << turnNumber << " turns.\n\nYou win!!";
+                cout << "\n\nPress enter to continue.";
+                cin.get();
+                return;
+            }
+            
+            shotResult = AIAttack(1);
+            
+            lastShot = shotResult;
+            turnNumber++;
         }
         else
         {
@@ -416,7 +682,8 @@ void Game::run()
                 {
                     clearScreen();
                     cout << "Congratulations, " << boards[count]->getName()
-                    << "! You've sunk the enemy's entire fleet.\n\nYou win!!";
+                    << "! You've sunk the enemy's entire fleet in "
+                    << turnNumber << " turns.\n\nYou win!!";
                     cout << "\n\nPress enter to continue.";
                     cin.get();
                     return;

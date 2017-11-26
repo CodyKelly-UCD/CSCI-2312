@@ -28,6 +28,7 @@ public:
     void printShipGrid() const;
     void removeShips();
     bool getLost() const;
+    inline vector<Ship*> getShips() const { return ships; }
     friend ostream& operator<< (ostream&, const Board&);
 private:
     Grid shotGrid;

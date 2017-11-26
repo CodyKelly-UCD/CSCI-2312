@@ -14,10 +14,10 @@ class Game
 {
 private:
     enum Difficulty { Easy, Normal, Hard };
-    Difficulty currentDifficulty;
+    Difficulty currentDifficulty = Difficulty::Easy;
     bool singlePlayer = true;
     Board* boards[2]; // Holds board for both players
-    void randomizeShips(Board*);
+    void randomizeShips(Board*, bool);
     ShotResult playerAttack(int);
     ShotResult AIAttack(int);
     void addShipRandomly(string, Board*);
