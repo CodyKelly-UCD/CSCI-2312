@@ -64,7 +64,7 @@ ostream& operator<< (ostream &os, const Grid &grid)
     
     for (int x = 0; x < grid.width; x++)
     {
-        os << setw(grid.tablePadding) << x + 1;
+        os << setw(grid.tablePadding) << char('A' + x);
     }
     
     os << endl;
@@ -73,7 +73,7 @@ ostream& operator<< (ostream &os, const Grid &grid)
     for (int y = 0; y < grid.height; y++)
     {
         // Y-axis labels
-        os << char('A' + y);
+        os << y + 1;
         
         // Row of grid contents
         for (int x = 0; x < grid.width; x++)
@@ -82,7 +82,7 @@ ostream& operator<< (ostream &os, const Grid &grid)
         }
         
         // Output y-axis labels again
-        os << setw(grid.tablePadding) << char('A' + y) << endl;
+        os << setw(grid.tablePadding) << y + 1 << endl;
     }
     
     // Output the x-axis labels again
@@ -90,7 +90,7 @@ ostream& operator<< (ostream &os, const Grid &grid)
     
     for (int x = 0; x < grid.width; x++)
     {
-        os << setw(grid.tablePadding) << x + 1;
+        os << setw(grid.tablePadding) << char('A' + x);
     }
     
     os << endl;

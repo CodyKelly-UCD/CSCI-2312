@@ -27,7 +27,13 @@ ShotResult Board::attack(Coordinate c)
             {
                 shotGrid.setValue(c.x, c.y, HIT);
                 result.hit = true;
-                result.shipSunk = ship.getName();
+                
+                // If the ship is sunk, return its name as well.
+                if (ship.getSunk())
+                {
+                    result.shipSunk = ship.getName();
+                }
+                
                 break;
             }
         }
@@ -119,7 +125,8 @@ void Board::markShot(Coordinate coord, bool hit)
 
 ostream& operator<< (ostream &os, const Board &board)
 {
-    os << board.shotGrid << endl << board.shipGrid;
+    os << "Shots you've made:\n" << board.shotGrid << endl
+    << "Your ships:\n" << board.shipGrid;
     
     return os;
 }

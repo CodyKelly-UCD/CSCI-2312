@@ -207,7 +207,7 @@ void Game::start()
             clearScreen();
             cout << "Player 2, please enter your name: ";
             name = getStringInput();
-            boards[0]->setName(name);
+            boards[1]->setName(name);
             
             clearScreen();
             cout << "Would you like to: \n";
@@ -281,7 +281,7 @@ ShotResult Game::playerAttack(int attackerIndex)
                 if (!(column >= 'A' && column <= 'J'))
                 {
                     validColumn = false;
-                    cout << "\nInvalid column. Please enter a letter from A to J.";
+                    cout << "\nInvalid column. Please enter a letter from A to J.\n";
                 }
                 else
                 {
@@ -302,7 +302,7 @@ ShotResult Game::playerAttack(int attackerIndex)
                 if (!(row >= 1 && row <= 10))
                 {
                     validRow = false;
-                    cout << "\nInvalid row. Please enter a number from 1 to 10.";
+                    cout << "\nInvalid row. Please enter a number from 1 to 10.\n";
                 }
                 else
                 {
@@ -366,7 +366,7 @@ void Game::run()
                 }
                 
                 // Display grids for player
-                cout << *boards[count];
+                cout << *boards[count] << endl;
                 
                 // Get the player's choice for a shot and process it
                 ShotResult shotResult = playerAttack(count);
@@ -389,6 +389,7 @@ void Game::run()
                 }
                 
                 cout << "\n\nPress enter to continue.";
+                cin.ignore();
                 cin.get();
                 
                 // If the other player lost, then the current one won!
