@@ -21,10 +21,12 @@ public:
     void markShot(Coordinate, bool);
     void addShip(Ship);
     inline void setPlayerType(PlayerType p) { playerType = p; }
-    inline PlayerType getPlayerType() { return playerType; }
+    inline PlayerType getPlayerType() const { return playerType; }
     inline void setName(string n) { playerName = n; }
-    inline string getName() { return playerName; }
-    bool getLost();
+    inline string getName() const { return playerName; }
+    void printShipGrid() const;
+    void removeShips();
+    bool getLost() const;
     friend ostream& operator<< (ostream&, const Board&);
 private:
     Grid shotGrid;

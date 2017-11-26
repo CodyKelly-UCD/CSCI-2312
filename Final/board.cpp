@@ -89,7 +89,7 @@ void Board::addShip(Ship newShip)
     ships.push_back(new Ship(newShip));
 }
 
-bool Board::getLost()
+bool Board::getLost() const
 {
     // seriously, get lost.
     // Whoops, I mean, this function returns true if
@@ -122,6 +122,21 @@ void Board::markShot(Coordinate coord, bool hit)
     }
     
     shotGrid.setValue(coord.x, coord.y, value);
+}
+
+void Board::printShipGrid() const
+{
+    cout << "Your ships:\n" << shipGrid;
+}
+
+void Board::removeShips()
+{
+    for (auto shipPtr : ships)
+    {
+        delete shipPtr;
+    }
+    
+    ships.resize(0);
 }
 
 ostream& operator<< (ostream &os, const Board &board)
