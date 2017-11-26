@@ -315,7 +315,7 @@ ShotResult Game::playerAttack(int attackerIndex)
         }
         catch (ExceptionShotCoordinateOccupied)
         {
-            cout << "\nThat position has been fired at already. Please choose another.\n";
+            cout << "\n\nThat position has been fired at already. Please choose another.\n";
             validCoordinate = false;
         }
     }

@@ -60,7 +60,10 @@ void Grid::setGrid(vector< vector<char> > newGrid)
 ostream& operator<< (ostream &os, const Grid &grid)
 {
     // First output the x-axis labels
-    os << ' ';
+    for (int count = 0; count < grid.tablePadding; count++)
+    {
+        os << ' ';
+    }
     
     for (int x = 0; x < grid.width; x++)
     {
@@ -73,7 +76,7 @@ ostream& operator<< (ostream &os, const Grid &grid)
     for (int y = 0; y < grid.height; y++)
     {
         // Y-axis labels
-        os << y + 1;
+        os << setw(grid.tablePadding) << y + 1;
         
         // Row of grid contents
         for (int x = 0; x < grid.width; x++)
@@ -86,7 +89,10 @@ ostream& operator<< (ostream &os, const Grid &grid)
     }
     
     // Output the x-axis labels again
-    os << ' ';
+    for (int count = 0; count < grid.tablePadding; count++)
+    {
+        os << ' ';
+    }
     
     for (int x = 0; x < grid.width; x++)
     {
