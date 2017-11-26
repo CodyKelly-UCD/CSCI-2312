@@ -395,7 +395,7 @@ void Game::run()
                 clearScreen();
                 if (shotResult.hit)
                 {
-                    cout << "Hit!";
+                    cout << "\aHit!";
                     
                     if (shotResult.sunk)
                     {
