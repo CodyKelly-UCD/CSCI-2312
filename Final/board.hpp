@@ -17,6 +17,7 @@ public:
     enum PlayerType { Human, Computer };
     Board();
     Board(PlayerType);
+    ~Board();
     ShotResult attack(Coordinate);
     void markShot(Coordinate, bool);
     void addShip(Ship);

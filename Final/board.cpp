@@ -131,3 +131,11 @@ ostream& operator<< (ostream &os, const Board &board)
     
     return os;
 }
+
+Board::~Board()
+{
+    for (auto shipPtr : ships)
+    {
+        delete shipPtr;
+    }
+}

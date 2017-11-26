@@ -315,7 +315,7 @@ ShotResult Game::playerAttack(int attackerIndex)
         }
         catch (ExceptionShotCoordinateOccupied)
         {
-            cout << "\nThat position has been fired at already. Please choose another.\n";
+            cout << "\n\nThat position has been fired at already. Please choose another.\n";
             validCoordinate = false;
         }
     }
@@ -365,11 +365,11 @@ void Game::run()
                     
                     if (lastShot.sunk)
                     {
-                        cout << "\nThey sank your " << lastShot.shipName << "!";
+                        cout << "\nThey sank your " << toLowercase(lastShot.shipName) << "!";
                     }
                     else if(lastShot.hit)
                     {
-                        cout << "\nThey hit your " << lastShot.shipName << "!";
+                        cout << "\nThey hit your " << toLowercase(lastShot.shipName) << "!";
                     }
                     
                     cout << endl << endl;
@@ -390,7 +390,7 @@ void Game::run()
                     
                     if (shotResult.sunk)
                     {
-                        cout << "\nYou sank their " << shotResult.shipName << "!";
+                        cout << "\nYou sank their " << toLowercase(shotResult.shipName) << "!";
                     }
                 }
                 else
