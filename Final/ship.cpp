@@ -3,25 +3,9 @@
 Ship::Ship(string n, int x, int y, char o) : name(n), posX(x), posY(y), orientation(o)
 {
     length = getShipLengthFromName(name);
-    hits.resize(length);
 }
 
-Ship::Ship() { }
-
-int Ship::getNumberOfHits() const
-{
-    int count = 0;
-    
-    for (bool hit : hits)
-    {
-        if (hit)
-        {
-            count++;
-        }
-    }
-    
-    return count;
-}
+Ship::Ship() : name(""), posX(0), posY(0), orientation(EMPTY) { }
 
 bool Ship::attack(Coordinate c)
 {
@@ -30,19 +14,25 @@ bool Ship::attack(Coordinate c)
     // Check if shot is a hit
     if (orientation == HORIZONTAL && c.y == posY && c.x >= posX && c.x < posX + length)
     {
-        hits[c.x - posX] = true;
         hit = true;
+        hits++;
+        
+        // Check if the boat's been sunk
+        if (hits == length)
+        {
+            sunk = true;
+        }
     }
     else if (orientation == VERTICAL && c.x == posX && c.y >= posY && c.y < posY + length)
     {
-        hits[c.y - posY] = true;
         hit = true;
-    }
-    
-    // Check if the boat's been sunk
-    if (getNumberOfHits() == length)
-    {
-        sunk = true;
+        hits++;
+        
+        // Check if the boat's been sunk
+        if (hits == length)
+        {
+            sunk = true;
+        }
     }
     
     return hit;
@@ -51,7 +41,6 @@ bool Ship::attack(Coordinate c)
 void Ship::setLength(int l)
 {
     length = l;
-    hits.resize(l);
 }
 
 vector<Coordinate> Ship::getCoordinatesContained() const

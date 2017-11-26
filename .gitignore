@@ -40,4 +40,6 @@
 # csv files
 *.csv
 
+*.input
+
 .DS_Store

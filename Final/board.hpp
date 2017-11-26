@@ -19,7 +19,7 @@ public:
     Board(PlayerType);
     ShotResult attack(Coordinate);
     void markShot(Coordinate, bool);
-    void addShip(Ship newShip);
+    void addShip(Ship);
     inline void setPlayerType(PlayerType p) { playerType = p; }
     inline PlayerType getPlayerType() { return playerType; }
     inline void setName(string n) { playerName = n; }
@@ -30,7 +30,7 @@ private:
     Grid shotGrid;
     Grid shipGrid;
     string playerName;
-    vector<Ship> ships;
+    vector<Ship*> ships;
     PlayerType playerType;
 };
 

@@ -79,7 +79,12 @@ string toLowercase(string s)
 void clearScreen()
 {
     // Outputs a bunch of newlines, effectively "clearing" the screen
-    int count = 5;
+    int count = 500;
+    
+    if (debug)
+    {
+        count = 5;
+    }
     
     while (count > 0)
     {

@@ -274,7 +274,7 @@ ShotResult Game::playerAttack(int attackerIndex)
                 
                 validColumn = true;
                 
-                cout << "Please enter a column letter (from A to J):";
+                cout << "Please enter a column letter (from A to J): ";
                 cin >> column;
                 column = toupper(column);
                 
@@ -296,7 +296,7 @@ ShotResult Game::playerAttack(int attackerIndex)
                 
                 validRow = true;
                 
-                cout << "Please enter a row number (from 1 to 10):";
+                cout << "Please enter a row number (from 1 to 10): ";
                 cin >> row;
                 
                 if (!(row >= 1 && row <= 10))
@@ -327,7 +327,7 @@ void Game::run()
 {
     bool gameOver = false;
     string winner = "";
-    Coordinate lastShot = Coordinate(0, 0);
+    ShotResult lastShot;
     int turnNumber = 1;
     
     while (!gameOver)
@@ -361,8 +361,18 @@ void Game::run()
                 // First tell the player where the other player shot last.
                 if (turnNumber != 1)
                 {
-                    cout << boards[otherPlayerIndex]->getName()
-                    << " shot at " << char('A' + lastShot.x) << lastShot.y;
+                    cout << "Last enemy shot: " << char('A' + lastShot.shotPosition.x) << lastShot.shotPosition.y + 1;
+                    
+                    if (lastShot.sunk)
+                    {
+                        cout << "\nThey sunk your " << lastShot.shipName << "!";
+                    }
+                    else if(lastShot.hit)
+                    {
+                        cout << "\nThey hit your " << lastShot.shipName << "!";
+                    }
+                    
+                    cout << endl << endl;
                 }
                 
                 // Display grids for player
@@ -378,9 +388,9 @@ void Game::run()
                 {
                     cout << "Hit!";
                     
-                    if (shotResult.shipSunk != "")
+                    if (shotResult.sunk)
                     {
-                        cout << "\nYou sank their " << shotResult.shipSunk << "!";
+                        cout << "\nYou sank their " << shotResult.shipName << "!";
                     }
                 }
                 else
@@ -403,7 +413,8 @@ void Game::run()
                     gameOver = true;
                 }
                 
-                lastShot = shotResult.shotPosition;
+                lastShot = shotResult;
+                turnNumber++;
             }
         }
     }

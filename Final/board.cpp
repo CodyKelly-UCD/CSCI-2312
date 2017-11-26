@@ -17,21 +17,22 @@ ShotResult Board::attack(Coordinate c)
     ShotResult result;
     result.shotPosition = c;
     
-    if (shotGrid.getValue(c.x, c.y) != HIT && shotGrid.getValue(c.x, c.y) != MISS)
+    if (shipGrid.getValue(c.x, c.y) != HIT && shipGrid.getValue(c.x, c.y) != MISS)
     {
         // If any of the ships report a hit, change the board value
         // and record info on the hit
         for (auto ship : ships)
         {
-            if (ship.attack(c))
+            if (ship->attack(c))
             {
-                shotGrid.setValue(c.x, c.y, HIT);
+                shipGrid.setValue(c.x, c.y, HIT);
                 result.hit = true;
+                result.shipName = ship->getName();
                 
                 // If the ship is sunk, return its name as well.
-                if (ship.getSunk())
+                if (ship->getSunk())
                 {
-                    result.shipSunk = ship.getName();
+                    result.sunk = true;
                 }
                 
                 break;
@@ -52,7 +53,7 @@ ShotResult Board::attack(Coordinate c)
     return result;
 }
 
-void Board::addShip(const Ship newShip)
+void Board::addShip(Ship newShip)
 {
     // First we'll check to see if the ship extends off the board
     for (auto coord : newShip.getCoordinatesContained())
@@ -71,7 +72,7 @@ void Board::addShip(const Ship newShip)
         for (auto coord : newShip.getCoordinatesContained())
         {
             // And see if any overlap:
-            if (ship.containsCoordinate(coord))
+            if (ship->containsCoordinate(coord))
             {
                 // If they do then the space
                 // is already occupied.
@@ -85,7 +86,7 @@ void Board::addShip(const Ship newShip)
         shipGrid.setValue(coord.x, coord.y, newShip.getName()[0]);
     }
     
-    ships.push_back(newShip);
+    ships.push_back(new Ship(newShip));
 }
 
 bool Board::getLost()
@@ -96,7 +97,7 @@ bool Board::getLost()
     
     for (auto ship : ships)
     {
-        if (!ship.getSunk())
+        if (!ship->getSunk())
         {
             return false;
         }

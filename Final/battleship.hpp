@@ -29,9 +29,10 @@ struct ShotResult
 {
     Coordinate shotPosition;
     bool hit;
-    string shipSunk;
-    ShotResult() : shotPosition(Coordinate(0, 0)), hit(false), shipSunk("") { }
-    ShotResult(Coordinate c, bool h, string s) : shotPosition(c), hit(h), shipSunk(s) { }
+    bool sunk;
+    string shipName;
+    ShotResult() : shotPosition(Coordinate(0, 0)), hit(false), sunk(false), shipName("") { }
+    ShotResult(Coordinate c, bool h, bool s1, string s2) : shotPosition(c), hit(h), sunk(s1), shipName(s2) { }
 };
 
 class ExceptionShotCoordinateOccupied { };
