@@ -9,7 +9,7 @@ const char  HIT = 'h',
             HORIZONTAL = 'H',
             VERTICAL = 'V';
 
-bool debug = false;
+bool debug = true;
 
 const pair<string, int> SHIPTYPES[] =
 {

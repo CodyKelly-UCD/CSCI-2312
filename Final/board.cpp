@@ -136,6 +136,8 @@ void Board::removeShips()
         delete shipPtr;
     }
     
+    shipGrid = Grid(10, 10);
+    
     ships.resize(0);
 }
 

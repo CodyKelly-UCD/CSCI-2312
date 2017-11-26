@@ -123,10 +123,19 @@ void Game::randomizeShips(Board *board)
     // Adds one ship of each kind to a random location
     // on the given board.
     
-    for (auto ship : SHIPTYPES)
+    do
     {
-        addShipRandomly(ship.first, board);
-    }
+        clearScreen();
+        board->removeShips();
+        
+        for (auto ship : SHIPTYPES)
+        {
+            addShipRandomly(ship.first, board);
+        }
+        
+        board->printShipGrid();
+        
+    } while (getMenuChoice(2, "\nWould you like to keep these positions or generate a new fleet?\n1) Keep positions\n2) Generate new ships") == 2);
 }
 
 void Game::start()
