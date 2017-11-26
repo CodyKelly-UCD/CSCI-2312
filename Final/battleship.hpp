@@ -19,9 +19,19 @@ extern bool debug;
 
 struct Coordinate
 {
-    int x;
-    int y;
+    int x = 0;
+    int y = 0;
+    Coordinate() : x(0), y(0) { }
     Coordinate(int _x, int _y) : x(_x), y(_y) { }
+};
+
+struct ShotResult
+{
+    Coordinate shotPosition;
+    bool hit;
+    string shipSunk;
+    ShotResult() : shotPosition(Coordinate(0, 0)), hit(false), shipSunk("") { }
+    ShotResult(Coordinate c, bool h, string s) : shotPosition(c), hit(h), shipSunk(s) { }
 };
 
 class ExceptionShotCoordinateOccupied { };

@@ -17,10 +17,13 @@ public:
     enum PlayerType { Human, Computer };
     Board();
     Board(PlayerType);
-    bool attack(Coordinate c);
+    ShotResult attack(Coordinate);
+    void markShot(Coordinate, bool);
     void addShip(Ship newShip);
-    void setPlayerType(PlayerType);
-    void setName(string);
+    inline void setPlayerType(PlayerType p) { playerType = p; }
+    inline PlayerType getPlayerType() { return playerType; }
+    inline void setName(string n) { playerName = n; }
+    inline string getName() { return playerName; }
     bool getLost();
     friend ostream& operator<< (ostream&, const Board&);
 private:

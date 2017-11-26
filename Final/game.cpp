@@ -168,8 +168,10 @@ void Game::start()
             {
                 cout << "Please enter your name: ";
                 name = getStringInput();
-                boards[0] -> setName(name);
+                boards[0]->setName(name);
             }
+            
+            boards[1]->setName("Computer");
                 
             readShips(boards[0]); // Read ships from file for player
             randomizeShips(boards[1]); // Get a random ship layout for AI
@@ -183,7 +185,7 @@ void Game::start()
             
             cout << "Player 1, please enter your name: ";
             name = getStringInput();
-            boards[0] -> setName(name);
+            boards[0]->setName(name);
             
             clearScreen();
             cout << "Would you like to: \n";
@@ -205,7 +207,7 @@ void Game::start()
             clearScreen();
             cout << "Player 2, please enter your name: ";
             name = getStringInput();
-            boards[0] -> setName(name);
+            boards[0]->setName(name);
             
             clearScreen();
             cout << "Would you like to: \n";
@@ -239,13 +241,169 @@ void Game::start()
     } while (getMenuChoice(2, "Would you like to play again?\n1) Yes\n2) No") == 1);
 }
 
+ShotResult Game::playerAttack(int attackerIndex)
+{
+    Coordinate coord;
+    bool validCoordinate = true;
+    int otherPlayerIndex;
+    ShotResult result;
+    
+    if (attackerIndex == 0)
+    {
+        otherPlayerIndex = 1;
+    }
+    else
+    {
+        otherPlayerIndex = 0;
+    }
+    
+    cout << "Enter attack coordinate information:\n";
+    
+    do
+    {
+        try
+        {
+            bool validColumn = true;
+            bool validRow = true;
+            validCoordinate = true;
+            
+            // Get x coordinate
+            do
+            {
+                char column;
+                
+                validColumn = true;
+                
+                cout << "Please enter a column letter (from A to J):";
+                cin >> column;
+                column = toupper(column);
+                
+                if (!(column >= 'A' && column <= 'J'))
+                {
+                    validColumn = false;
+                    cout << "\nInvalid column. Please enter a letter from A to J.";
+                }
+                else
+                {
+                    coord.x = int(column - 'A');
+                }
+            } while (!validColumn);
+            
+            // Get y coordinate
+            do
+            {
+                int row;
+                
+                validRow = true;
+                
+                cout << "Please enter a row number (from 1 to 10):";
+                cin >> row;
+                
+                if (!(row >= 1 && row <= 10))
+                {
+                    validRow = false;
+                    cout << "\nInvalid row. Please enter a number from 1 to 10.";
+                }
+                else
+                {
+                    coord.y = row - 1;
+                }
+            } while (!validRow);
+            
+            // Try attack
+            result = boards[otherPlayerIndex]->attack(coord);
+        }
+        catch (ExceptionShotCoordinateOccupied)
+        {
+            validCoordinate = false;
+        }
+    }
+    while (!validCoordinate);
+    
+    return result;
+}
+
 void Game::run()
 {
     bool gameOver = false;
-    
+    string winner = "";
+    Coordinate lastShot = Coordinate(0, 0);
+    int turnNumber = 1;
     
     while (!gameOver)
     {
-        gameOver = true;
+        if (singlePlayer)
+        {
+            
+        }
+        else
+        {
+            for (int count = 0; count < 2; count++)
+            {
+                int otherPlayerIndex = 0;
+                
+                if (count == 0)
+                {
+                    otherPlayerIndex = 1;
+                }
+                else
+                {
+                    otherPlayerIndex = 0;
+                }
+                
+                clearScreen();
+                cout << "Your turn, " << boards[count]->getName() << ".\n";
+                cout << "Press enter when ready.";
+                cin.get();
+                
+                clearScreen();
+                
+                // First tell the player where the other player shot last.
+                if (turnNumber != 1)
+                {
+                    cout << boards[otherPlayerIndex]->getName()
+                    << " shot at " << char('A' + lastShot.x) << lastShot.y;
+                }
+                
+                // Display grids for player
+                cout << *boards[count];
+                
+                // Get the player's choice for a shot and process it
+                ShotResult shotResult = playerAttack(count);
+                boards[count]->markShot(shotResult.shotPosition, shotResult.hit);
+                
+                // Give the player shot results..
+                clearScreen();
+                if (shotResult.hit)
+                {
+                    cout << "Hit!";
+                    
+                    if (shotResult.shipSunk != "")
+                    {
+                        cout << "\nYou sank their " << shotResult.shipSunk << "!";
+                    }
+                }
+                else
+                {
+                    cout << "Miss.";
+                }
+                
+                cout << "\n\nPress enter to continue.";
+                cin.get();
+                
+                // If the other player lost, then the current one won!
+                if (boards[otherPlayerIndex]->getLost())
+                {
+                    clearScreen();
+                    cout << "Congratulations, " << boards[count]->getName()
+                    << "! You've sunk the enemy's entire fleet.\n\nYou win!!";
+                    cout << "\n\nPress enter to continue.";
+                    cin.get();
+                    gameOver = true;
+                }
+                
+                lastShot = shotResult.shotPosition;
+            }
+        }
     }
 }

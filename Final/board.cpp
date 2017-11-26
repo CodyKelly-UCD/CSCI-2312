@@ -12,38 +12,38 @@ Board::Board(PlayerType p) : playerType(p)
     shipGrid = Grid(10, 10);
 }
 
-void Board::setName(string n) { playerName = n; }
-
-void Board::setPlayerType(PlayerType p) { playerType = p; }
-
-bool Board::attack(Coordinate c)
+ShotResult Board::attack(Coordinate c)
 {
-    bool hit = false;
+    ShotResult result;
+    result.shotPosition = c;
     
-    if (shotGrid.getValue(c.x, c.y) == EMPTY)
+    if (shotGrid.getValue(c.x, c.y) != HIT && shotGrid.getValue(c.x, c.y) != MISS)
     {
         // If any of the ships report a hit, change the board value
-        // and return true
+        // and record info on the hit
         for (auto ship : ships)
         {
             if (ship.attack(c))
             {
                 shotGrid.setValue(c.x, c.y, HIT);
-                hit = true;
+                result.hit = true;
+                result.shipSunk = ship.getName();
                 break;
             }
         }
         
         // If no ships report a hit, mark it as miss
-        if (!hit)
+        if (!result.hit)
         {
-            shotGrid.setValue(c.x, c.y, MISS);
+            shipGrid.setValue(c.x, c.y, MISS);
         }
-        
-        return true; // attack was completed
+    }
+    else
+    {
+        throw ExceptionShotCoordinateOccupied();
     }
     
-    return false; // attack failed, player needs to try again
+    return result;
 }
 
 void Board::addShip(const Ship newShip)
@@ -97,6 +97,24 @@ bool Board::getLost()
     }
     
     return true;
+}
+
+
+void Board::markShot(Coordinate coord, bool hit)
+{
+    // Marks the result of a shot on this board's shotGrid
+    char value = EMPTY;
+    
+    if (hit)
+    {
+        value = HIT;
+    }
+    else
+    {
+        value = MISS;
+    }
+    
+    shotGrid.setValue(coord.x, coord.y, value);
 }
 
 ostream& operator<< (ostream &os, const Board &board)

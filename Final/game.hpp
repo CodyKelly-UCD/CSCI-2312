@@ -18,10 +18,10 @@ private:
     bool singlePlayer = true;
     Board* boards[2]; // Holds board for both players
     void randomizeShips(Board*);
-    Coordinate getPlayerAttack(Board);
-    Coordinate getAIAttack(Board[2]);
-    void addShipFromPlayer(string, Board*);
+    ShotResult playerAttack(int);
+    ShotResult AIAttack(int);
     void addShipRandomly(string, Board*);
+    void addShipFromPlayer(string, Board*);
     void readShips(Board*);
     void run();
 public:
