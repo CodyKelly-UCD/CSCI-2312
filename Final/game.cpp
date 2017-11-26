@@ -315,6 +315,7 @@ ShotResult Game::playerAttack(int attackerIndex)
         }
         catch (ExceptionShotCoordinateOccupied)
         {
+            cout << "\nThat position has been fired at already. Please choose another.\n";
             validCoordinate = false;
         }
     }
@@ -325,12 +326,11 @@ ShotResult Game::playerAttack(int attackerIndex)
 
 void Game::run()
 {
-    bool gameOver = false;
     string winner = "";
     ShotResult lastShot;
     int turnNumber = 1;
     
-    while (!gameOver)
+    while (true)
     {
         if (singlePlayer)
         {
@@ -365,7 +365,7 @@ void Game::run()
                     
                     if (lastShot.sunk)
                     {
-                        cout << "\nThey sunk your " << lastShot.shipName << "!";
+                        cout << "\nThey sank your " << lastShot.shipName << "!";
                     }
                     else if(lastShot.hit)
                     {
@@ -410,7 +410,7 @@ void Game::run()
                     << "! You've sunk the enemy's entire fleet.\n\nYou win!!";
                     cout << "\n\nPress enter to continue.";
                     cin.get();
-                    gameOver = true;
+                    return;
                 }
                 
                 lastShot = shotResult;
