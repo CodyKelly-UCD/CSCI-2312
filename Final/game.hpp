@@ -14,6 +14,7 @@ class Game
 {
 private:
     enum Difficulty { Easy, Normal, Hard };
+    enum Mode { Regular, Salvo };
     Difficulty currentDifficulty = Difficulty::Easy;
     bool singlePlayer = true;
     Board* boards[2]; // Holds board for both players

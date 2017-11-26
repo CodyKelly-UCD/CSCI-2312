@@ -8,8 +8,110 @@ using std::cout;
 using std::cin;
 using std::rand;
 
-void Game::addShipFromPlayer(string, Board*)
+void Game::addShipFromPlayer(string name, Board* board)
 {
+    bool valid = true;
+    char x;
+    int y;
+    Ship ship;
+    int length = getShipLengthFromName(name);
+    string part; // This will tell the player what part of the ship they're
+                 // placing
+    
+    do
+    {
+        valid = true;
+        
+        char orientation;
+        int validXRange = int('J' - 'A'), validYRange = 10;
+        
+        clearScreen();
+        board->printShipGrid();
+        cout << "\nYou're placing: " << name;
+        cout << "\nIt looks like this: ";
+        
+        // Get length
+        for (int count = 0; count < length; count++)
+        {
+            cout << name[0];
+        }
+        
+        // Get orientation
+        cout << "\n\nChoose orientation:\n1) Horizontal\n2) Vertical";
+        if (getMenuChoice(2) == 1)
+        {
+            orientation = HORIZONTAL;
+            validXRange = int('J' - length - 'A') + 1;
+            part = "leftmost";
+        }
+        else
+        {
+            orientation = VERTICAL;
+            validYRange -= length - 1;
+            part = "top";
+        }
+        
+        // Get x position
+        bool validX = true;
+        cout << "Please enter a column to put the " << part << " of the ship.";
+        do
+        {
+            validX = true;
+            cout << "\nMust be a letter from A to " << char('A' + validXRange);
+            cout << "\n> ";
+            cin >> x;
+            x = toupper(x);
+            
+            // I'm not sure why I have to do this but I do..
+            if (x < 'A' || x > char(validXRange + 'A'))
+            {
+                validX = false;
+            }
+        } while (!validX);
+        
+        // Get y position
+        bool validY = true;
+        cout << "\nPlease enter a row to put the " << part << " part of the ship.";
+        do
+        {
+            validY = true;
+            cout << "\nMust be a number from 1 to " << validYRange;
+            cout << "\n> ";
+            cin >> y;
+            
+            if (y < 1 || y > validYRange)
+            {
+                validY = false;
+            }
+        } while (!validY);
+        
+        // Set values
+        ship.setPosX(int(x - 'A'));
+        ship.setPosY(y - 1);
+        ship.setOrientation(orientation);
+        ship.setName(name);
+        ship.setLength(length);
+        
+        // Try to place ship
+        try
+        {
+            board->addShip(ship);
+        }
+        catch (ExceptionShipPlacementOccupied)
+        {
+            valid = false;
+            clearScreen();
+            cout << "Your ship overlaps another ship. Would you like to"
+            << "\n1) Try again\n2) Place ship randomly";
+            
+            if (getMenuChoice(2) == 2)
+            {
+                valid = true;
+                addShipRandomly(name, board);
+            }
+        }
+        
+    } while (!valid);
     
 }
 
