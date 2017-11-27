@@ -562,7 +562,7 @@ ShotResult Game::playerAttack(int attackerIndex)
                 
                 validColumn = true;
                 
-                cout << "Please enter a column letter (from A to J): ";
+                cout << "Please enter a column letter (from A to J) or enter q to exit: ";
                 cin >> column;
                 column = toupper(column);
                 
@@ -570,6 +570,10 @@ ShotResult Game::playerAttack(int attackerIndex)
                 {
                     validColumn = false;
                     cout << "\nInvalid column. Please enter a letter from A to J.\n";
+                }
+                else if (tolower(column) == 'q')
+                {
+                    exit(0);
                 }
                 else
                 {
@@ -584,13 +588,17 @@ ShotResult Game::playerAttack(int attackerIndex)
                 
                 validRow = true;
                 
-                cout << "Please enter a row number (from 1 to 10): ";
+                cout << "Please enter a row number (from 1 to 10) or enter -1 to quit: ";
                 cin >> row;
                 
                 if (!(row >= 1 && row <= 10))
                 {
                     validRow = false;
                     cout << "\nInvalid row. Please enter a number from 1 to 10.\n";
+                }
+                else if (row == -1)
+                {
+                    exit(0);
                 }
                 else
                 {
