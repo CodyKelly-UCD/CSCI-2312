@@ -818,6 +818,17 @@ void Game::run()
                         lastTurnResults.push_back(AIAttack(currentPlayerIndex));
                     }
                 }
+                
+                // If the other player lost, then the current one won!
+                if (boards[otherPlayerIndex]->getLost())
+                {
+                    clearScreen();
+                    cout << "Gentlemen, it has been a privilage playing with you tonight.\"\n\n";
+                    cout << "You were defeated in " << turnNumber << " turns.\n\n";
+                    cout << "\n\nPress enter to continue.";
+                    cin.get();
+                    return;
+                }
             }
         }
         
