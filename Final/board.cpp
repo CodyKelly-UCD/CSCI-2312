@@ -141,6 +141,21 @@ void Board::removeShips()
     ships.resize(0);
 }
 
+int Board::shipsRemaining()
+{
+    int shipsRemaining = 0;
+    
+    for (auto ship : ships)
+    {
+        if (!ship->getSunk())
+        {
+            shipsRemaining++;
+        }
+    }
+    
+    return shipsRemaining;
+}
+
 ostream& operator<< (ostream &os, const Board &board)
 {
     os << "Shots you've made:\n" << board.shotGrid << endl

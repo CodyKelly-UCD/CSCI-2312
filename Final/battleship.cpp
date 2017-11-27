@@ -133,3 +133,10 @@ void displayTitle()
         cin.get();
     }
 }
+
+std::ostream& operator<< (std::ostream& os, const Coordinate c)
+{
+    os << char(c.x + 'A') << c.y + 1;
+    
+    return os;
+}

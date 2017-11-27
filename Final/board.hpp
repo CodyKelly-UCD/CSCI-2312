@@ -30,6 +30,7 @@ public:
     bool getLost() const;
     inline vector<Ship*> getShips() const { return ships; }
     friend ostream& operator<< (ostream&, const Board&);
+    int shipsRemaining();
 private:
     Grid shotGrid;
     Grid shipGrid;

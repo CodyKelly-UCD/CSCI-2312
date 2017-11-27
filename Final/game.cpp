@@ -277,7 +277,24 @@ void Game::start()
         // Display main menu
         clearScreen();
         cout << "\n\nWelcome to Battleship!\n\n";
-        cout << "Main Menu\n1) Single player game\n2) Two player game";
+        cout << "Main Menu\n1) Start classic mode\n2) Start salvo mode";
+        int modeChoice = getMenuChoice(2);
+        
+        switch (modeChoice)
+        {
+            case 1:
+                currentMode = GameMode::Regular;
+                break;
+            case 2:
+                currentMode = GameMode::Salvo;
+                
+            default:
+                break;
+        }
+        
+        // Get number of players
+        clearScreen();
+        cout << "Please choose:\n1) One player\n2) Two players";
         singlePlayer = getMenuChoice(2) == 1;
         clearScreen();
         
@@ -573,8 +590,6 @@ ShotResult Game::playerAttack(int attackerIndex)
         otherPlayerIndex = 0;
     }
     
-    cout << "Enter attack coordinate information:\n";
-    
     do
     {
         try
@@ -640,140 +655,178 @@ ShotResult Game::playerAttack(int attackerIndex)
     return result;
 }
 
+void Game::printLastTurnResults(vector<ShotResult> results)
+{
+    if (currentMode == GameMode::Regular)
+    {
+        cout << "Last enemy shot: " << results[0].shotPosition;
+        
+        if (results[0].sunk)
+        {
+            cout << "\nThey sank your " << toLowercase(results[0].shipName) << "!";
+        }
+        else if(results[0].hit)
+        {
+            cout << "\nThey hit your " << toLowercase(results[0].shipName) << "!";
+        }
+        
+        cout << endl;
+    }
+    else if (currentMode == GameMode::Salvo)
+    {
+        int count = 1;
+        
+        cout << "Enemy shot results:\n";
+        for (auto shot : results)
+        {
+            cout << "Shot #" << count << " at position " << shot.shotPosition
+            << ": ";
+            
+            if (shot.sunk)
+            {
+                cout << "Sunk your " << toLowercase(shot.shipName) << "!";
+            }
+            else if(shot.hit)
+            {
+                cout << "Hit your " << toLowercase(shot.shipName) << "!";
+            }
+            else
+            {
+                cout << "Missed.";
+            }
+            
+            count++;
+            cout << endl;
+        }
+    }
+    
+    cout << endl;
+}
+
+void Game::printCurrentTurnResults(vector<ShotResult> results)
+{
+    clearScreen();
+    
+    if (currentMode == GameMode::Regular)
+    {
+        if (results[0].hit)
+        {
+            cout << "\aHit!";
+            
+            if (results[0].sunk)
+            {
+                cout << "\nYou sank their " << toLowercase(results[0].shipName) << "!";
+            }
+        }
+        else
+        {
+            cout << "Miss.";
+        }
+    }
+    else if (currentMode == GameMode::Salvo)
+    {
+        int count = 1;
+        bool hit = false;
+        
+        cout << "Your shot results:\n";
+        for (auto shot : results)
+        {
+            cout << "Shot #" << count << " at position " << shot.shotPosition
+            << ": ";
+            
+            if (shot.sunk)
+            {
+                cout << "Sank their " << toLowercase(shot.shipName) << "!";
+                hit = true;
+            }
+            else if(shot.hit)
+            {
+                cout << "Hit their " << toLowercase(shot.shipName) << "!";
+                hit = true;
+            }
+            else
+            {
+                cout << "Missed.";
+            }
+            
+            count++;
+            cout << endl;
+        }
+        
+        if (hit)
+        {
+            cout << "\a"; // Make alert noise if any hits were made
+        }
+    }
+}
+
 void Game::run()
 {
-    string winner = "";
-    ShotResult lastShot;
+    vector<ShotResult> lastTurnResults;
     int turnNumber = 1;
     
     while (true)
     {
-        if (singlePlayer)
+        for (int currentPlayerIndex = 0; currentPlayerIndex < 2; currentPlayerIndex++)
         {
-            clearScreen();
             
-            // First tell the player where the other player shot last.
-            if (turnNumber != 1)
+            int otherPlayerIndex = 0;
+            
+            if (currentPlayerIndex == 0)
             {
-                cout << "Last enemy shot: " << char('A' + lastShot.shotPosition.x) << lastShot.shotPosition.y + 1;
-                
-                if (lastShot.sunk)
-                {
-                    cout << "\nThey sank your " << toLowercase(lastShot.shipName) << "!";
-                }
-                else if(lastShot.hit)
-                {
-                    cout << "\nThey hit your " << toLowercase(lastShot.shipName) << "!";
-                }
-                
-                cout << endl << endl;
-            }
-            
-            // Display grids for player
-            cout << *boards[0] << endl;
-            
-            // Get the player's choice for a shot and process it
-            ShotResult shotResult = playerAttack(0);
-            boards[0]->markShot(shotResult.shotPosition, shotResult.hit);
-            
-            // Give the player shot results..
-            clearScreen();
-            if (shotResult.hit)
-            {
-                cout << "\aHit!";
-                
-                if (shotResult.sunk)
-                {
-                    cout << "\nYou sank their " << toLowercase(shotResult.shipName) << "!";
-                }
+                otherPlayerIndex = 1;
             }
             else
             {
-                cout << "Miss.";
+                otherPlayerIndex = 0;
             }
             
-            cout << "\n\nPress enter to continue.";
-            cin.ignore();
-            cin.get();
-            
-            // If the other player lost, then the current one won!
-            if (boards[1]->getLost())
+            if (boards[currentPlayerIndex]->getPlayerType() == Board::PlayerType::Human)
             {
-                clearScreen();
-                cout << "Congratulations, " << boards[0]->getName()
-                << "! You've sunk the enemy's entire fleet in "
-                << turnNumber << " turns.\n\nYou win!!";
-                cout << "\n\nPress enter to continue.";
-                cin.get();
-                return;
-            }
-            
-            shotResult = AIAttack(1);
-            
-            lastShot = shotResult;
-            turnNumber++;
-        }
-        else
-        {
-            for (int count = 0; count < 2; count++)
-            {
-                int otherPlayerIndex = 0;
-                
-                if (count == 0)
+                if (!singlePlayer)
                 {
-                    otherPlayerIndex = 1;
-                }
-                else
-                {
-                    otherPlayerIndex = 0;
+                    clearScreen();
+                    cout << "Your turn, " << boards[currentPlayerIndex]->getName() << ".\n";
+                    cout << "Press enter when ready.";
+                    cin.get();
                 }
                 
                 clearScreen();
-                cout << "Your turn, " << boards[count]->getName() << ".\n";
-                cout << "Press enter when ready.";
-                cin.get();
-                
-                clearScreen();
-                
-                // First tell the player where the other player shot last.
                 if (turnNumber != 1)
                 {
-                    cout << "Last enemy shot: " << char('A' + lastShot.shotPosition.x) << lastShot.shotPosition.y + 1;
-                    
-                    if (lastShot.sunk)
-                    {
-                        cout << "\nThey sank your " << toLowercase(lastShot.shipName) << "!";
-                    }
-                    else if(lastShot.hit)
-                    {
-                        cout << "\nThey hit your " << toLowercase(lastShot.shipName) << "!";
-                    }
-                    
-                    cout << endl << endl;
+                    printLastTurnResults(lastTurnResults);
+                    lastTurnResults.clear();
                 }
-                
+                    
                 // Display grids for player
-                cout << *boards[count] << endl;
+                cout << *boards[currentPlayerIndex] << endl;
                 
-                // Get the player's choice for a shot and process it
-                ShotResult shotResult = playerAttack(count);
-                boards[count]->markShot(shotResult.shotPosition, shotResult.hit);
-                
-                // Give the player shot results..
-                clearScreen();
-                if (shotResult.hit)
+                // Process player's attacks
+                if (currentMode == GameMode::Regular)
                 {
-                    cout << "\aHit!";
+                    cout << "Enter attack coordinate information:\n";
+                    ShotResult result = playerAttack(currentPlayerIndex);
+                    boards[currentPlayerIndex]->markShot(result.shotPosition, result.hit);
+                    lastTurnResults.push_back(result);
+                }
+                else if (currentMode == GameMode::Salvo)
+                {
+                    int availableShots = boards[currentPlayerIndex]->shipsRemaining();
                     
-                    if (shotResult.sunk)
+                    cout << "You have " << availableShots << " available shots.";
+                    
+                    for (int count = 0; count < availableShots; count++)
                     {
-                        cout << "\nYou sank their " << toLowercase(shotResult.shipName) << "!";
+                        // Get the player's choice for a shot and process it
+                        cout << "\n\nEnter coordinates for attack #" << count + 1
+                        << ":\n";
+                        ShotResult result = playerAttack(currentPlayerIndex);
+                        boards[currentPlayerIndex]->markShot(result.shotPosition, result.hit);
+                        lastTurnResults.push_back(result);
                     }
                 }
-                else
-                {
-                    cout << "Miss.";
-                }
+                
+                printCurrentTurnResults(lastTurnResults);
                 
                 cout << "\n\nPress enter to continue.";
                 cin.ignore();
@@ -783,17 +836,34 @@ void Game::run()
                 if (boards[otherPlayerIndex]->getLost())
                 {
                     clearScreen();
-                    cout << "Congratulations, " << boards[count]->getName()
+                    cout << "Congratulations, " << boards[currentPlayerIndex]->getName()
                     << "! You've sunk the enemy's entire fleet in "
                     << turnNumber << " turns.\n\nYou win!!";
                     cout << "\n\nPress enter to continue.";
                     cin.get();
                     return;
                 }
+            }
+            else // if computer player
+            {
+                lastTurnResults.clear();
                 
-                lastShot = shotResult;
-                turnNumber++;
+                if (currentMode == GameMode::Regular)
+                {
+                    lastTurnResults.push_back(AIAttack(currentPlayerIndex));
+                }
+                else if (currentMode == GameMode::Salvo)
+                {
+                    int availableShots = boards[currentPlayerIndex]->shipsRemaining();
+                    
+                    for (int count = 0; count < availableShots; count++)
+                    {
+                        lastTurnResults.push_back(AIAttack(currentPlayerIndex));
+                    }
+                }
             }
         }
+        
+        turnNumber++;
     }
 }

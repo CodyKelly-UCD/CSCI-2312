@@ -14,8 +14,8 @@ class Game
 {
 private:
     enum Difficulty { Easy, Normal, Hard };
-    enum Mode { Regular, Salvo };
-    Mode currentMode = Mode::Regular;
+    enum GameMode { Regular, Salvo };
+    GameMode currentMode = GameMode::Regular;
     Difficulty currentDifficulty = Difficulty::Easy;
     bool singlePlayer = true;
     Board* boards[2]; // Holds board for both players
@@ -24,6 +24,8 @@ private:
     ShotResult AIAttack(int);
     void addShipRandomly(string, Board*);
     void addShipFromPlayer(string, Board*);
+    void printLastTurnResults(vector<ShotResult>);
+    void printCurrentTurnResults(vector<ShotResult>);
     void readShips(Board*);
     void run();
 public:

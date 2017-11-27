@@ -26,6 +26,8 @@ struct Coordinate
     Coordinate(int _x, int _y) : x(_x), y(_y) { }
 };
 
+std::ostream& operator<< (std::ostream&, const Coordinate);
+
 struct ShotResult
 {
     Coordinate shotPosition;
