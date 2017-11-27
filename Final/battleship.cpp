@@ -1,4 +1,5 @@
 #include <iomanip>
+#include <limits>
 
 #include "battleship.hpp"
 
