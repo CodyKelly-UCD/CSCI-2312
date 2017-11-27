@@ -24,8 +24,9 @@ private:
     ShotResult AIAttack(int);
     void addShipRandomly(string, Board*);
     void addShipFromPlayer(string, Board*);
-    void printLastTurnResults(vector<ShotResult>);
-    void printCurrentTurnResults(vector<ShotResult>);
+    void printOpponentTurnResults(vector<ShotResult>);
+    void printCurrentTurnResults(vector<ShotResult>, bool);
+    void processAttacks(int, vector< vector<ShotResult> >&);
     void readShips(Board*);
     void run();
 public:
