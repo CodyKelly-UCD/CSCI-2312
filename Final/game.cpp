@@ -720,58 +720,6 @@ void Game::printCurrentTurnResults(vector<ShotResult> results, bool playSound = 
     }
 }
 
-void Game::processAttacks(int currentPlayerIndex, vector< vector<ShotResult> > &turnResults)
-{
-    int otherPlayerIndex = 0;
-    
-    if (currentPlayerIndex == 0)
-    {
-        otherPlayerIndex = 1;
-    }
-    else
-    {
-        otherPlayerIndex = 0;
-    }
-    
-    if (currentMode == GameMode::Regular)
-    {
-        cout << "Enter attack coordinate information:\n";
-        ShotResult result = playerAttack(currentPlayerIndex);
-        boards[currentPlayerIndex]->markShot(result.shotPosition, result.hit);
-        turnResults[currentPlayerIndex].push_back(result);
-    }
-    else if (currentMode == GameMode::Salvo)
-    {
-        int availableShots = boards[currentPlayerIndex]->shipsRemaining();
-        
-        cout << "You have " << availableShots << " available shots.";
-        
-        for (int count = 0; count < availableShots; count++)
-        {
-            // Get the player's choice for a shot and process it
-            cout << "\n\nEnter coordinates for attack #" << count + 1
-            << ":\n";
-            ShotResult result = playerAttack(currentPlayerIndex);
-            boards[currentPlayerIndex]->markShot(result.shotPosition, result.hit);
-            turnResults[currentPlayerIndex].push_back(result);
-            
-            // If the other player won, we can stop process their moves
-            if (boards[otherPlayerIndex]->getLost())
-            {
-                return;
-            }
-        }
-    }
-    
-    clearScreen();
-    cout << "Your turn results:\n";
-    printCurrentTurnResults(turnResults[currentPlayerIndex]);
-    
-    cout << "\n\nPress enter to continue.";
-    cin.ignore();
-    cin.get();
-}
-
 void Game::run()
 {
     vector< vector<ShotResult> > turnResults = {vector<ShotResult>(), vector<ShotResult>()}; // Holds shot results for both players
@@ -825,7 +773,43 @@ void Game::run()
                 // Display grids for player
                 cout << *boards[currentPlayerIndex] << endl;
                 
-                processAttacks(currentPlayerIndex, turnResults);
+                if (currentMode == GameMode::Regular)
+                {
+                    cout << "Enter attack coordinate information:\n";
+                    ShotResult result = playerAttack(currentPlayerIndex);
+                    boards[currentPlayerIndex]->markShot(result.shotPosition, result.hit);
+                    turnResults[currentPlayerIndex].push_back(result);
+                }
+                else if (currentMode == GameMode::Salvo)
+                {
+                    int availableShots = boards[currentPlayerIndex]->shipsRemaining();
+                    
+                    cout << "You have " << availableShots << " available shots.";
+                    
+                    for (int count = 0; count < availableShots; count++)
+                    {
+                        // Get the player's choice for a shot and process it
+                        cout << "\n\nEnter coordinates for attack #" << count + 1
+                        << ":\n";
+                        ShotResult result = playerAttack(currentPlayerIndex);
+                        boards[currentPlayerIndex]->markShot(result.shotPosition, result.hit);
+                        turnResults[currentPlayerIndex].push_back(result);
+                        
+                        // If the other player won, we can stop process their moves
+                        if (boards[otherPlayerIndex]->getLost())
+                        {
+                            break;
+                        }
+                    }
+                }
+                
+                clearScreen();
+                cout << "Your turn results:\n";
+                printCurrentTurnResults(turnResults[currentPlayerIndex]);
+                
+                cout << "\n\nPress enter to continue.";
+                cin.ignore();
+                cin.get();
                 
                 // If the other player lost, then the current one won!
                 if (boards[otherPlayerIndex]->getLost())

@@ -26,7 +26,6 @@ private:
     void addShipFromPlayer(string, Board*);
     void printOpponentTurnResults(vector<ShotResult>);
     void printCurrentTurnResults(vector<ShotResult>, bool);
-    void processAttacks(int, vector< vector<ShotResult> >&);
     void readShips(Board*);
     void run();
 public:
