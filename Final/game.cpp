@@ -749,7 +749,7 @@ void Game::run()
                 }
                 
                 clearScreen();
-                if (turnNumber != 1)
+                if (turnNumber != 1 || currentPlayerIndex == 1)
                 {
                     printLastTurnResults(lastTurnResults);
                     lastTurnResults.clear();
