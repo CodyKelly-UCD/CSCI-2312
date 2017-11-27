@@ -13,7 +13,7 @@ using std::string;
 class Game
 {
 private:
-    enum Difficulty { Easy, Normal, Hard };
+    enum Difficulty { Easy, Normal, Hard, Extreme };
     enum GameMode { Regular, Salvo };
     GameMode currentMode = GameMode::Regular;
     Difficulty currentDifficulty = Difficulty::Easy;

@@ -158,68 +158,6 @@ void Game::addShipRandomly(string name, Board* board)
     } while (!valid);
 }
 
-void Game::readShips(Board *board)
-{
-    ifstream file("./ship_placement.csv");
-    file.ignore(256, '\n'); // ignore first line
-    
-    for (int shipCount = 5; shipCount > 0; shipCount--)
-    {
-        string name;
-        char x, y;
-        char orientation;
-        
-        getline(file, name, ',');
-        name = toLowercase(name);
-        
-        file >> x;
-        file >> y;
-        file.ignore(); // ignore comma
-        
-        file >> orientation;
-        file.ignore(2); // go to next line
-        
-        Ship newShip = Ship(name, int(x - 'A'), int(y - '1'), orientation);
-        
-        try
-        {
-            board->addShip(newShip);
-        }
-        catch (ExceptionShipOutOfBounds)
-        {
-            clearScreen();
-            cout << "The " << name << " from the file was out of bounds.\n\n"
-            << "Would you like to:\n1) Enter a new position\n2) Get a random position";
-            
-            if (getMenuChoice(2) == 1)
-            {
-                addShipFromPlayer(name, board);
-            }
-            else
-            {
-                addShipRandomly(name, board);
-            }
-        }
-        catch (ExceptionShipPlacementOccupied)
-        {
-            clearScreen();
-            cout << "The position for the " << name << " read in from the file was occupied by another ship.\n\n"
-            << "Would you like to:\n1) Enter a new position\n2) Get a random position";
-            
-            if (getMenuChoice(2) == 1)
-            {
-                addShipFromPlayer(name, board);
-            }
-            else
-            {
-                addShipRandomly(name, board);
-            }
-        }
-    }
-    
-    file.close();
-}
-
 void Game::randomizeShips(Board *board, bool displayChoice = true)
 {
     // Adds one ship of each kind to a random location
@@ -248,6 +186,96 @@ void Game::randomizeShips(Board *board, bool displayChoice = true)
         for (auto ship : SHIPTYPES)
         {
             addShipRandomly(ship.first, board);
+        }
+    }
+}
+
+void Game::readShips(Board *board)
+{
+    ifstream file;
+    
+    try
+    {
+        file.open("./ship_placement.csv");
+        file.ignore(256, '\n'); // ignore first line
+    }
+    catch (const ifstream::failure) { }
+    
+    if (file)
+    {
+        for (int shipCount = 5; shipCount > 0; shipCount--)
+        {
+            string name;
+            char x, y;
+            char orientation;
+            
+            getline(file, name, ',');
+            name = toLowercase(name);
+            
+            file >> x;
+            file >> y;
+            file.ignore(); // ignore comma
+            
+            file >> orientation;
+            file.ignore(2); // go to next line
+            
+            Ship newShip = Ship(name, int(x - 'A'), int(y - '1'), orientation);
+            
+            try
+            {
+                board->addShip(newShip);
+            }
+            catch (ExceptionShipOutOfBounds)
+            {
+                clearScreen();
+                cout << "The " << name << " from the file was out of bounds.\n\n"
+                << "Would you like to:\n1) Enter a new position\n2) Get a random position";
+                
+                if (getMenuChoice(2) == 1)
+                {
+                    addShipFromPlayer(name, board);
+                }
+                else
+                {
+                    addShipRandomly(name, board);
+                }
+            }
+            catch (ExceptionShipPlacementOccupied)
+            {
+                clearScreen();
+                cout << "The position for the " << name << " read in from the file was occupied by another ship.\n\n"
+                << "Would you like to:\n1) Enter a new position\n2) Get a random position";
+                
+                if (getMenuChoice(2) == 1)
+                {
+                    addShipFromPlayer(name, board);
+                }
+                else
+                {
+                    addShipRandomly(name, board);
+                }
+            }
+        }
+        
+        file.close();
+    }
+    else
+    {
+        clearScreen();
+        cout << "Would you like to: \n";
+        cout << "1) Choose ship locations manually or\n";
+        cout << "2) Randomize ship locations";
+        
+        if (getMenuChoice(2) == 1)
+        {
+            for (auto ship : SHIPTYPES)
+            {
+                addShipFromPlayer(ship.first, boards[0]);
+            }
+        }
+        else
+        {
+            randomizeShips(boards[0]);
         }
     }
 }
@@ -312,8 +340,8 @@ void Game::start()
             }
             
             clearScreen();
-            cout << "Please choose difficulty:\n1) Easy\n2) Normal\n3) Hard";
-            int choice = getMenuChoice(3);
+            cout << "Please choose difficulty:\n1) Easy\n2) Normal\n3) Hard\n4) EXTREME!!";
+            int choice = getMenuChoice(4);
             
             switch (choice)
             {
@@ -323,9 +351,15 @@ void Game::start()
                     
                 case 2:
                     currentDifficulty = Difficulty::Normal;
+                    break;
                     
                 case 3:
                     currentDifficulty = Difficulty::Hard;
+                    break;
+                    
+                case 4:
+                    currentDifficulty = Difficulty::Extreme;
+                    break;
                     
                 default:
                     break;
@@ -408,6 +442,8 @@ ShotResult Game::AIAttack(int attackerIndex)
     ShotResult result;
     bool validCoordinate = true;
     int otherPlayerIndex;
+    int hitChance = 0;
+    int randNum = rand() % 100;
     
     if (attackerIndex == 0)
     {
@@ -420,152 +456,73 @@ ShotResult Game::AIAttack(int attackerIndex)
     
     switch (currentDifficulty)
     {
-        case Easy:
-        {
-            do
-            {
-                validCoordinate = true;
-                
-                // Get random coordinates
-                int x = rand() % 10;
-                int y = rand() % 10;
-                
-                // Try attack
-                try
-                {
-                    result = boards[otherPlayerIndex]->attack(Coordinate(x, y));
-                }
-                catch (ExceptionShotCoordinateOccupied)
-                {
-                    validCoordinate = false;
-                }
-            } while (!validCoordinate);
-            
-            break;
-        }
-            
         case Normal:
-        {
-            int randNum = rand() % 100;
-            
-            if (randNum <= HITCHANCENORMAL) // If we're guaranteed a hit
-            {
-                do
-                {
-                    validCoordinate = true;
-                    
-                    int randShipNum = rand() % 5;
-                    
-                    // First we get a vector containing all the ships on the
-                    // other person's board
-                    vector<Ship*> ships = boards[otherPlayerIndex]->getShips();
-                    
-                    // Then we get a random ship from that vector
-                    Ship* ship = ships[randShipNum];
-                    
-                    // Now we choose a random coordinate within that ship
-                    int randShipCoordinateIndex = rand() % ship->getLength();
-                    Coordinate randCoord = ship->getCoordinatesContained()[randShipCoordinateIndex];
-                    
-                    // Then we attack that coordinate
-                    try
-                    {
-                        result = boards[otherPlayerIndex]->attack(randCoord);
-                    }
-                    catch (ExceptionShotCoordinateOccupied)
-                    {
-                        validCoordinate = false;
-                    }
-                    
-                } while (!validCoordinate);
-            }
-            else // otherwise, pick a random coordinate
-            {
-                do
-                {
-                    validCoordinate = true;
-                    
-                    // Get random coordinates
-                    int x = rand() % 10;
-                    int y = rand() % 10;
-                    
-                    // Try attack
-                    try
-                    {
-                        result = boards[otherPlayerIndex]->attack(Coordinate(x, y));
-                    }
-                    catch (ExceptionShotCoordinateOccupied)
-                    {
-                        validCoordinate = false;
-                    }
-                } while (!validCoordinate);
-            }
-            
+            hitChance = HITCHANCENORMAL;
             break;
-        }
             
         case Hard:
-        {
-            int randNum = rand() % 100;
-            
-            if (randNum <= HITCHANCEHARD) // If we're guaranteed a hit
-            {
-                do
-                {
-                    validCoordinate = true;
-                    
-                    int randShipNum = rand() % 5;
-                    
-                    // First we get a vector containing all the ships on the
-                    // other person's board
-                    vector<Ship*> ships = boards[otherPlayerIndex]->getShips();
-                    
-                    // Then we get a random ship from that vector
-                    Ship* ship = ships[randShipNum];
-                    
-                    // Now we choose a random coordinate within that ship
-                    int randShipCoordinateIndex = rand() % ship->getLength();
-                    Coordinate randCoord = ship->getCoordinatesContained()[randShipCoordinateIndex];
-                    
-                    // Then we attack that coordinate
-                    try
-                    {
-                        result = boards[otherPlayerIndex]->attack(randCoord);
-                    }
-                    catch (ExceptionShotCoordinateOccupied)
-                    {
-                        validCoordinate = false;
-                    }
-                    
-                } while (!validCoordinate);
-            }
-            else // otherwise, pick a random coordinate
-            {
-                do
-                {
-                    validCoordinate = true;
-                    
-                    // Get random coordinates
-                    int x = rand() % 10;
-                    int y = rand() % 10;
-                    
-                    // Try attack
-                    try
-                    {
-                        result = boards[otherPlayerIndex]->attack(Coordinate(x, y));
-                    }
-                    catch (ExceptionShotCoordinateOccupied)
-                    {
-                        validCoordinate = false;
-                    }
-                } while (!validCoordinate);
-            }
-            
+            hitChance = HITCHANCEHARD;
             break;
-        }
+            
+        case Extreme:
+            hitChance = HITCHANCEEXTREME;
+            break;
             
         default:
             break;
+    }
+    
+    if (randNum < hitChance) // If we're guaranteed a hit
+    {
+        do
+        {
+            validCoordinate = true;
+            
+            int randShipNum = rand() % 5;
+            
+            // First we get a vector containing all the ships on the
+            // other person's board
+            vector<Ship*> ships = boards[otherPlayerIndex]->getShips();
+            
+            // Then we get a random ship from that vector
+            Ship* ship = ships[randShipNum];
+            
+            // Now we choose a random coordinate within that ship
+            int randShipCoordinateIndex = rand() % ship->getLength();
+            Coordinate randCoord = ship->getCoordinatesContained()[randShipCoordinateIndex];
+            
+            // Then we attack that coordinate
+            try
+            {
+                result = boards[otherPlayerIndex]->attack(randCoord);
+            }
+            catch (ExceptionShotCoordinateOccupied)
+            {
+                validCoordinate = false;
+            }
+            
+        } while (!validCoordinate);
+    }
+    else // otherwise, pick a random coordinate
+    {
+        do
+        {
+            validCoordinate = true;
+            
+            // Get random coordinates
+            int x = rand() % 10;
+            int y = rand() % 10;
+            
+            // Try attack
+            try
+            {
+                result = boards[otherPlayerIndex]->attack(Coordinate(x, y));
+            }
+            catch (ExceptionShotCoordinateOccupied)
+            {
+                validCoordinate = false;
+            }
+        } while (!validCoordinate);
     }
     
     return result;

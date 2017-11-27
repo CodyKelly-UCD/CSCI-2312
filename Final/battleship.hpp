@@ -12,7 +12,7 @@ using std::cin;
 using std::endl;
 
 extern const char HIT, MISS, EMPTY, HORIZONTAL, VERTICAL;
-extern const int HITCHANCENORMAL, HITCHANCEHARD;
+extern const int HITCHANCENORMAL, HITCHANCEHARD, HITCHANCEEXTREME;
 extern const pair<string, int> SHIPTYPES[5];
 extern const string title;
 
