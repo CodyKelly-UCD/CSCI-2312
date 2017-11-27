@@ -846,7 +846,7 @@ void Game::run()
                 if (boards[otherPlayerIndex]->getLost())
                 {
                     clearScreen();
-                    cout << "Gentlemen, it has been a privilage playing with you tonight.\"\n\n";
+                    cout << "\"Gentlemen, it has been a privilage playing with you tonight.\"\n\n";
                     cout << "You were defeated in " << turnNumber << " turns.\n\n";
                     cout << "\n\nPress enter to continue.";
                     cin.get();
