@@ -9,9 +9,9 @@ const char  HIT = 'h',
             HORIZONTAL = 'H',
             VERTICAL = 'V';
 
-const int HITCHANCENORMAL = 8;
+const int HITCHANCENORMAL = 10;
 const int HITCHANCEHARD = 13;
-const int HITCHANCEEXTREME = 17;
+const int HITCHANCEEXTREME = 20;
 
 bool debug = false;
 
