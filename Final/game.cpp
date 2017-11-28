@@ -206,7 +206,8 @@ void Game::readShips(Board *board)
         for (int shipCount = 5; shipCount > 0; shipCount--)
         {
             string name;
-            char x, y;
+            char x;
+            int y;
             char orientation;
             
             getline(file, name, ',');
@@ -219,7 +220,7 @@ void Game::readShips(Board *board)
             file >> orientation;
             file.ignore(2); // go to next line
             
-            Ship newShip = Ship(name, int(x - 'A'), int(y - '1'), orientation);
+            Ship newShip = Ship(name, int(x - 'A'), y - 1, orientation);
             
             try
             {
