@@ -15,6 +15,7 @@ class Game
 private:
     enum Difficulty { Easy, Normal, Hard, Extreme };
     enum GameMode { Regular, Salvo };
+    bool quitGame = false;
     GameMode currentMode = GameMode::Regular;
     Difficulty currentDifficulty = Difficulty::Easy;
     bool singlePlayer = true;
@@ -26,6 +27,7 @@ private:
     void addShipFromPlayer(string, Board*);
     void printOpponentTurnResults(vector<ShotResult>);
     void printCurrentTurnResults(vector<ShotResult>, bool);
+    void printBothBoards();
     void readShips(Board*);
     void run();
 public:

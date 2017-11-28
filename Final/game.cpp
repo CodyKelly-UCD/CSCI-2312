@@ -611,6 +611,7 @@ ShotResult Game::playerAttack(int attackerIndex)
                 
                 if (tolower(column) == 'q')
                 {
+                    printBothBoards();
                     exit(0);
                 }
                 else if (!(column >= 'A' && column <= 'J'))
@@ -636,6 +637,7 @@ ShotResult Game::playerAttack(int attackerIndex)
                 
                 if (row == -1)
                 {
+                    printBothBoards();
                     exit(0);
                 }
                 else if (!(row >= 1 && row <= 10))
@@ -661,6 +663,13 @@ ShotResult Game::playerAttack(int attackerIndex)
     while (!validCoordinate);
     
     return result;
+}
+
+void Game::printBothBoards()
+{
+    clearScreen();
+    cout << boards[0]->getName() << "'s board:\n" << *boards[0];
+    cout << endl << endl << boards[1]->getName() << "'s board:\n" << *boards[1];
 }
 
 void Game::printOpponentTurnResults(vector<ShotResult> results)
@@ -872,6 +881,9 @@ void Game::run()
                     cout << "\n\nPress enter to continue.";
                     cin.clear();
                     cin.get();
+                    printBothBoards();
+                    cout << "\n\nPress enter to continue.";
+                    cin.get();
                     return;
                 }
             }
@@ -899,6 +911,10 @@ void Game::run()
                     clearScreen();
                     cout << "\"Gentlemen, it has been a privilage playing with you tonight.\"\n\n";
                     cout << "You were defeated in " << turnNumber << " turns.\n\n";
+                    cout << "\n\nPress enter to continue.";
+                    cin.clear();
+                    cin.get();
+                    printBothBoards();
                     cout << "\n\nPress enter to continue.";
                     cin.get();
                     return;

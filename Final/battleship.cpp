@@ -19,11 +19,11 @@ bool debug = false;
 const pair<string, int> SHIPTYPES[] =
 {
     // Pairing ship names with lengths
-    pair<string, int>("Carrier", 5),
-    pair<string, int>("Battleship", 4),
-    pair<string, int>("Cruiser", 3),
-    pair<string, int>("Submarine", 3),
-    pair<string, int>("Destroyer", 2)
+    pair<string, int>("carrier", 5),
+    pair<string, int>("battleship", 4),
+    pair<string, int>("cruiser", 3),
+    pair<string, int>("submarine", 3),
+    pair<string, int>("destroyer", 2)
 };
 
 const string title = "  ██████╗  █████╗ ████████╗████████╗██╗     ███████╗███████╗██╗  ██╗██╗██████╗ \n  ██╔══██╗██╔══██╗╚══██╔══╝╚══██╔══╝██║     ██╔════╝██╔════╝██║  ██║██║██╔══██╗\n  ██████╔╝███████║   ██║      ██║   ██║     █████╗  ███████╗███████║██║██████╔╝\n  ██╔══██╗██╔══██║   ██║      ██║   ██║     ██╔══╝  ╚════██║██╔══██║██║██╔═══╝ \n  ██████╔╝██║  ██║   ██║      ██║   ███████╗███████╗███████║██║  ██║██║██║     \n  ╚═════╝ ╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝╚═╝     \n                                                                               \n";
@@ -73,9 +73,9 @@ string getStringInput()
 string toLowercase(string s)
 {
     // Converts all uppercase letters in a string to lowercase letters
-    for (auto c : s)
+    for (auto it = s.begin(); it != s.end(); it++)
     {
-        c = tolower(c);
+        *it = tolower(*it);
     }
     
     return s;
