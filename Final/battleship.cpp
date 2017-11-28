@@ -4,8 +4,8 @@
 #include "battleship.hpp"
 
 
-const char  HIT = 'h',
-            MISS = 'm',
+const char  HIT = 'O',
+            MISS = 'X',
             EMPTY = ' ',
             HORIZONTAL = 'H',
             VERTICAL = 'V';

@@ -203,7 +203,9 @@ void Game::readShips(Board *board)
     
     if (file)
     {
-        for (int shipCount = 5; shipCount > 0; shipCount--)
+        vector<string> shipNames; // This is used to tell if we're missing any
+                                  // ships in the ship_placement file
+        while (!file.eof())
         {
             string name;
             char x;
@@ -211,6 +213,7 @@ void Game::readShips(Board *board)
             char orientation;
             
             getline(file, name, ',');
+            shipNames.push_back(name);
             name = toLowercase(name);
             
             file >> x;
@@ -259,6 +262,45 @@ void Game::readShips(Board *board)
         }
         
         file.close();
+        
+        while (shipNames.size() < 5)
+        {
+            // Go through each known ship type
+            for (auto shipType : SHIPTYPES)
+            {
+                bool alreadyAdded = false;
+                
+                // And each ship we've added
+                for (auto shipName : shipNames)
+                {
+                    if (shipName == shipType.first)
+                    {
+                        alreadyAdded = true;
+                        break;
+                    }
+                }
+                
+                // If the current ship type isn't in our list of names, we
+                // have to add it manually.
+                if (!alreadyAdded)
+                {
+                    clearScreen();
+                    cout << "The position for the " << shipType.first << " wasn't detected in the file given.\n\n"
+                    << "Would you like to:\n1) Enter a new position\n2) Get a random position";
+                    
+                    if (getMenuChoice(2) == 1)
+                    {
+                        addShipFromPlayer(shipType.first, board);
+                    }
+                    else
+                    {
+                        addShipRandomly(shipType.first, board);
+                    }
+                    
+                    shipNames.push_back(shipType.first);
+                }
+            }
+        }
     }
     else
     {
