@@ -933,7 +933,9 @@ void Game::run()
                 
                 if (currentMode == GameMode::Regular)
                 {
-                    turnResults[currentPlayerIndex].push_back(AIAttack(currentPlayerIndex));
+                    ShotResult result = AIAttack(currentPlayerIndex);
+                    turnResults[currentPlayerIndex].push_back(result);
+                    boards[currentPlayerIndex]->markShot(result.shotPosition, result.hit);
                 }
                 else if (currentMode == GameMode::Salvo)
                 {
@@ -941,7 +943,9 @@ void Game::run()
                     
                     for (int count = 0; count < availableShots; count++)
                     {
-                        turnResults[currentPlayerIndex].push_back(AIAttack(currentPlayerIndex));
+                        ShotResult result = AIAttack(currentPlayerIndex);
+                        turnResults[currentPlayerIndex].push_back(result);
+                        boards[currentPlayerIndex]->markShot(result.shotPosition, result.hit);
                     }
                 }
                 
