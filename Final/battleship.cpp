@@ -100,8 +100,8 @@ void clearScreen()
 
 int getShipLengthFromName(string name)
 {
-    // We try to match the name given to our ship to a ship in our SHIPS array
-    // so we can set our ship to the desired length.
+    // We try to match the name given to our ship to a ship in our SHIPTYPES
+    // array so we can set our ship to the desired length.
     bool validName = false;
     int length = 0;
     
@@ -125,6 +125,8 @@ int getShipLengthFromName(string name)
 
 void displayTitle()
 {
+    // Prints the title and other stuff and things.
+    
     if (!debug)
     {
         clearScreen();
@@ -138,6 +140,8 @@ void displayTitle()
 
 std::ostream& operator<< (std::ostream& os, const Coordinate c)
 {
+    // Formats a coordinate for easy printing.
+    
     os << char(c.x + 'A') << c.y + 1;
     
     return os;

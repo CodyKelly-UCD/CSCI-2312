@@ -14,6 +14,16 @@
 *  Description of the program
 *******************************************************
 
+Before I say anything else - I definitely did the extra
+credit for this project. If you’re testing the program,
+you’ll have to select Classic mode (option 1), then 
+single player (option 1 again). That will take you to 
+the game mode that was asked for in the project 
+requirements. All the other modes are just extras I 
+threw in.
+
+Anyway..
+
 This is the game of Battleship! Available for one or two
 players are the following game modes:
 

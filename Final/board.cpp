@@ -14,6 +14,9 @@ Board::Board(PlayerType p) : playerType(p)
 
 ShotResult Board::attack(Coordinate c)
 {
+    // This function takes a coordinate and checks every ship in its ship vector
+    // for a hit. It returns the results of the attack.
+    
     ShotResult result;
     result.shotPosition = c;
     
@@ -55,6 +58,9 @@ ShotResult Board::attack(Coordinate c)
 
 void Board::addShip(Ship newShip)
 {
+    // Adds a ship to the board if the ship doesn't overlap any others and
+    // is fully contained within the board.
+    
     // First we'll check to see if the ship extends off the board
     for (auto coord : newShip.getCoordinatesContained())
     {
@@ -110,6 +116,7 @@ bool Board::getLost() const
 void Board::markShot(Coordinate coord, bool hit)
 {
     // Marks the result of a shot on this board's shotGrid
+    
     char value = EMPTY;
     
     if (hit)
@@ -143,6 +150,8 @@ void Board::removeShips()
 
 int Board::shipsRemaining()
 {
+    // Returns the number of ships on the board that are NOT sunk.
+    
     int shipsRemaining = 0;
     
     for (auto ship : ships)

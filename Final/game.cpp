@@ -10,6 +10,12 @@ using std::rand;
 
 void Game::addShipFromPlayer(string name, Board* board)
 {
+    // This function asks the user for coordinates and orientation to place a
+    // ship. The ship length is determined from the name variable, and the board
+    // to place it in is given by the board variable.
+    // This function also checks for valid coordinates and makes sure the ship
+    // does not go out of bounds or overlaps other ships.
+    
     bool valid = true;
     char x;
     int y;
@@ -117,6 +123,10 @@ void Game::addShipFromPlayer(string name, Board* board)
 
 void Game::addShipRandomly(string name, Board* board)
 {
+    // This function tries random positions and orientations for a ship until
+    // a valid one if found. The length of the ship is determined by the name
+    // variable, and the board it's placed in is given by the board variable.
+    
     bool valid = true;
     Ship ship;
     int length = getShipLengthFromName(name);
@@ -160,8 +170,9 @@ void Game::addShipRandomly(string name, Board* board)
 
 void Game::randomizeShips(Board *board, bool displayChoice = true)
 {
-    // Adds one ship of each kind to a random location
-    // on the given board.
+    // This function places one ship of each kind on the given board until all
+    // ship types are placed. If displayChoice is true, the function will
+    // confirm ship placements with the player until they are satisfied.
     
     if (displayChoice)
     {
@@ -192,6 +203,11 @@ void Game::randomizeShips(Board *board, bool displayChoice = true)
 
 void Game::readShips(Board *board)
 {
+    // This function reads in information from a number of ships, creates them,
+    // and checks for errors when placing them. If an error is detected or a
+    // type of ship is missing from the file, the function will ask the player
+    // to either place it themselves or place it in a random position.
+    
     ifstream file;
     
     try
@@ -327,8 +343,8 @@ void Game::start()
 {
     // This function sets up a game.
     // It prints the title, creates boards of specific types
-    // (human or computer), gets the names of the players, and when the game
-    // is over it asks if the players would like to play again.
+    // (human or computer), sets the game mode, gets the names of the players,
+    // and when the game is over it asks if the players would like to play again
     
     srand(int(time(NULL)));
     
@@ -480,7 +496,13 @@ void Game::start()
 
 ShotResult Game::AIAttack(int attackerIndex)
 {
-    // This function calculates an attack coordinate for the computer player
+    // This function attacks a spot on the player's board depending on the
+    // difficulty setting. It generates a random variable, and if it's less than
+    // the "HITCHANCE" corresponding to the difficulty level, it will hit a ship.
+    // If the random variable is more than the hit chance, it will attack a
+    // random coordinate. The attackerIndex variable is used to determine
+    // which board is the computer's and which board is the player's.
+    // This function returns the shot result when completed.
     
     ShotResult result;
     bool validCoordinate = true;
@@ -574,7 +596,11 @@ ShotResult Game::AIAttack(int attackerIndex)
 ShotResult Game::playerAttack(int attackerIndex)
 {
     // This function asks user for a coordinate, then returns the result
-    // of attacking that coordinate
+    // of attacking that coordinate. The attackerIndex variable is used to
+    // determine which board belongs to the player attacking.
+    
+    // Since this is where the players will be providing the most input, we
+    // also use this function to exit the game if the player wants to.
     
     Coordinate coord;
     bool validCoordinate = true;
@@ -667,6 +693,9 @@ ShotResult Game::playerAttack(int attackerIndex)
 
 void Game::printBothBoards()
 {
+    // This function outputs both boards to the screen. Used for when a match is
+    // concluded so player can view where their opponent's ships were.
+    
     clearScreen();
     cout << boards[0]->getName() << "'s board:\n" << *boards[0];
     cout << endl << endl << boards[1]->getName() << "'s board:\n" << *boards[1];
@@ -674,6 +703,10 @@ void Game::printBothBoards()
 
 void Game::printOpponentTurnResults(vector<ShotResult> results)
 {
+    // This function prints shot results to the screen so a player can see where
+    // their opponent fired at and the results of those attacks last turn. The
+    // results vector are the opponent's shot results.
+    
     if (currentMode == GameMode::Regular)
     {
         cout << "Last enemy shot: " << results[0].shotPosition;
@@ -722,6 +755,10 @@ void Game::printOpponentTurnResults(vector<ShotResult> results)
 
 void Game::printCurrentTurnResults(vector<ShotResult> results, bool playSound = true)
 {
+    // This function prints the current player's shot results, given by the
+    // results variable. If playSound is true, the function will output an
+    // alert character, making a noise when the player scores a hit.
+    
     if (currentMode == GameMode::Regular)
     {
         cout << "Shot at " << results[0].shotPosition << ": ";
@@ -782,6 +819,9 @@ void Game::printCurrentTurnResults(vector<ShotResult> results, bool playSound = 
 
 void Game::run()
 {
+    // This is the main game loop for the game. It loops through both boards,
+    // getting each player's attacks and checking if either has won.
+    
     vector< vector<ShotResult> > turnResults = {vector<ShotResult>(), vector<ShotResult>()}; // Holds shot results for both players
     int turnNumber = 1;
     
